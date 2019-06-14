@@ -7,9 +7,10 @@
 
 %option noyywrap
 %{
-    #include <stdio.h>
-    #include "parser.tab.h"
+    #include "y.tab.h"
     #include <string>
+    #include <iostream>
+    using namespace std;
 %}
 
 white [ \t\n\r]+
@@ -99,27 +100,27 @@ str \"([^"\\\r\n]|{escapesequence})*\"
 <MULTICOMMENT>"*/" {BEGIN(INITIAL);}
 
 {id} {
-    yylval.str = new std::string(yytext, yyleng);
+    yylval.str = new string(yytext, yyleng);
     return IDENTIFIER;
 }
 
 {integer} {
-    yylval.str = new std::string(yytext, yyleng);
+    yylval.str = new string(yytext, yyleng);
     return INTEGER;
 }
 
 {float} {
-    yylval.str = new std::string(yytext, yyleng);
+    yylval.str = new string(yytext, yyleng);
     return DOUBLE_NUMBER;
 }
 
 {character} {
-    yylval.str = new std::string(yytext, yyleng);
+    yylval.str = new string(yytext, yyleng);
     return CHARACTER;
 }
 
 {str} {
-    yylval.str = new std::string(yytext, yyleng);
+    yylval.str = new string(yytext, yyleng);
     return STRING;
 }
 
