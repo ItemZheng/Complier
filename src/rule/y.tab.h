@@ -180,11 +180,11 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 14 "parse.y"
+#line 16 "parse.y"
 {
     int          int_value;
     double       double_value;
-    string 	 str;
+    std::string  *str;
     // TODO
 }
 /* Line 1529 of yacc.c.  */

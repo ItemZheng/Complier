@@ -5,16 +5,18 @@
 #define YYDEBUG 1
 
 using namespace std;
+int yyerror(char const *str);
 /* from .l file */
 extern int yylex();
 extern char *yytext;
 extern int yylineno;
+extern FILE *yyin;
 
 %}
 %union {
     int          int_value;
     double       double_value;
-    string 	 str;
+    std::string  *str;
     // TODO
 }
 %token INT LONG FLOAT SHORT VOID DOUBLE CHAR UNSIGNED CONST SIGNED STRUCT UNION ENUM VOLATILE
@@ -512,7 +514,7 @@ labeledStatement :
 int yyerror(char const *str)
 {
     extern char *yytext;
-    fprintf(stderr, "Parser error near %s at line \n", yytext, yylineno);
+    fprintf(stderr, "Parser error near %s at line %d\n", yytext, yylineno);
     return 0;
 }
 

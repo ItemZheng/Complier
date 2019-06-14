@@ -214,10 +214,12 @@
 #define YYDEBUG 1
 
 using namespace std;
+int yyerror(char const *str);
 /* from .l file */
 extern int yylex();
 extern char *yytext;
 extern int yylineno;
+extern FILE *yyin;
 
 
 
@@ -241,15 +243,15 @@ extern int yylineno;
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 14 "parse.y"
+#line 16 "parse.y"
 {
     int          int_value;
     double       double_value;
-    string 	 str;
+    std::string  *str;
     // TODO
 }
 /* Line 193 of yacc.c.  */
-#line 253 "y.tab.c"
+#line 255 "y.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -262,7 +264,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 266 "y.tab.c"
+#line 268 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -592,17 +594,17 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    36,    36,    41,    44,    51,    56,    59,    62,    65,
-      68,    71,    74,    80,    83,    90,    93,    96,   105,   135,
-     138,   141,   144,   147,   150,   153,   156,   159,   162,   165,
-     168,   171,   174,   177,   180,   183,   186,   189,   192,   195,
-     198,   201,   204,   210,   213,   219,   222,   225,   229,   234,
-     236,   243,   245,   253,   256,   262,   265,   271,   277,   283,
-     289,   292,   298,   301,   308,   314,   321,   327,   330,   336,
-     339,   345,   348,   351,   354,   360,   363,   368,   371,   374,
-     380,   383,   386,   390,   394,   399,   402,   408,   410,   416,
-     419,   425,   428,   431,   435,   441,   444,   449,   452,   458,
-     461,   468,   471,   477,   480,   486,   493,   496,   503,   506
+       0,    38,    38,    43,    46,    53,    58,    61,    64,    67,
+      70,    73,    76,    82,    85,    92,    95,    98,   107,   137,
+     140,   143,   146,   149,   152,   155,   158,   161,   164,   167,
+     170,   173,   176,   179,   182,   185,   188,   191,   194,   197,
+     200,   203,   206,   212,   215,   221,   224,   227,   231,   236,
+     238,   245,   247,   255,   258,   264,   267,   273,   279,   285,
+     291,   294,   300,   303,   310,   316,   323,   329,   332,   338,
+     341,   347,   350,   353,   356,   362,   365,   370,   373,   376,
+     382,   385,   388,   392,   396,   401,   404,   410,   412,   418,
+     421,   427,   430,   433,   437,   443,   446,   451,   454,   460,
+     463,   470,   473,   479,   482,   488,   495,   498,   505,   508
 };
 #endif
 
@@ -1688,756 +1690,756 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 36 "parse.y"
+#line 38 "parse.y"
     {
 		// create root
 	}
     break;
 
   case 3:
-#line 41 "parse.y"
+#line 43 "parse.y"
     {
 
  	}
     break;
 
   case 4:
-#line 44 "parse.y"
+#line 46 "parse.y"
     {
 
  	}
     break;
 
   case 5:
-#line 51 "parse.y"
+#line 53 "parse.y"
     {
 
 }
     break;
 
   case 6:
-#line 56 "parse.y"
+#line 58 "parse.y"
     {
 
 	}
     break;
 
   case 7:
-#line 59 "parse.y"
+#line 61 "parse.y"
     {
 
 	}
     break;
 
   case 8:
-#line 62 "parse.y"
+#line 64 "parse.y"
     {
 
 	}
     break;
 
   case 9:
-#line 65 "parse.y"
+#line 67 "parse.y"
     {
 
 	}
     break;
 
   case 10:
-#line 68 "parse.y"
+#line 70 "parse.y"
     {
 
 	}
     break;
 
   case 11:
-#line 71 "parse.y"
+#line 73 "parse.y"
     {
 
 	}
     break;
 
   case 12:
-#line 74 "parse.y"
+#line 76 "parse.y"
     {
 
 	}
     break;
 
   case 13:
-#line 80 "parse.y"
+#line 82 "parse.y"
     {
 
 	}
     break;
 
   case 14:
-#line 83 "parse.y"
+#line 85 "parse.y"
     {
 
 	}
     break;
 
   case 15:
-#line 90 "parse.y"
+#line 92 "parse.y"
     {
 
 	}
     break;
 
   case 16:
-#line 93 "parse.y"
+#line 95 "parse.y"
     {
 
 	}
     break;
 
   case 17:
-#line 96 "parse.y"
+#line 98 "parse.y"
     {
 
 	}
     break;
 
   case 18:
-#line 105 "parse.y"
+#line 107 "parse.y"
     {
 
 	}
     break;
 
   case 19:
-#line 135 "parse.y"
+#line 137 "parse.y"
     {
 
 	}
     break;
 
   case 20:
-#line 138 "parse.y"
+#line 140 "parse.y"
     {
 
 	}
     break;
 
   case 21:
-#line 141 "parse.y"
+#line 143 "parse.y"
     {
 
 	}
     break;
 
   case 22:
-#line 144 "parse.y"
+#line 146 "parse.y"
     {
 
 	}
     break;
 
   case 23:
-#line 147 "parse.y"
+#line 149 "parse.y"
     {
 
 	}
     break;
 
   case 24:
-#line 150 "parse.y"
+#line 152 "parse.y"
     {
 
 	}
     break;
 
   case 25:
-#line 153 "parse.y"
+#line 155 "parse.y"
     {
 
 	}
     break;
 
   case 26:
-#line 156 "parse.y"
+#line 158 "parse.y"
     {
 
 	}
     break;
 
   case 27:
-#line 159 "parse.y"
+#line 161 "parse.y"
     {
 
 	}
     break;
 
   case 28:
-#line 162 "parse.y"
+#line 164 "parse.y"
     {
 
 	}
     break;
 
   case 29:
-#line 165 "parse.y"
+#line 167 "parse.y"
     {
 
 	}
     break;
 
   case 30:
-#line 168 "parse.y"
+#line 170 "parse.y"
     {
 
 	}
     break;
 
   case 31:
-#line 171 "parse.y"
+#line 173 "parse.y"
     {
 
 	}
     break;
 
   case 32:
-#line 174 "parse.y"
+#line 176 "parse.y"
     {
 
 	}
     break;
 
   case 33:
-#line 177 "parse.y"
+#line 179 "parse.y"
     {
 
 	}
     break;
 
   case 34:
-#line 180 "parse.y"
+#line 182 "parse.y"
     {
 
 	}
     break;
 
   case 35:
-#line 183 "parse.y"
+#line 185 "parse.y"
     {
 
 	}
     break;
 
   case 36:
-#line 186 "parse.y"
+#line 188 "parse.y"
     {
 
 	}
     break;
 
   case 37:
-#line 189 "parse.y"
+#line 191 "parse.y"
     {
 
 	}
     break;
 
   case 38:
-#line 192 "parse.y"
+#line 194 "parse.y"
     {
 
 	}
     break;
 
   case 39:
-#line 195 "parse.y"
+#line 197 "parse.y"
     {
 
 	}
     break;
 
   case 40:
-#line 198 "parse.y"
+#line 200 "parse.y"
     {
 
 	}
     break;
 
   case 41:
-#line 201 "parse.y"
+#line 203 "parse.y"
     {
 
 	}
     break;
 
   case 42:
-#line 204 "parse.y"
+#line 206 "parse.y"
     {
 
 	}
     break;
 
   case 43:
-#line 210 "parse.y"
+#line 212 "parse.y"
     {
 
 	}
     break;
 
   case 44:
-#line 213 "parse.y"
+#line 215 "parse.y"
     {
 
 	}
     break;
 
   case 45:
-#line 219 "parse.y"
+#line 221 "parse.y"
     {
 
 	}
     break;
 
   case 46:
-#line 222 "parse.y"
+#line 224 "parse.y"
     {
 
 	}
     break;
 
   case 47:
-#line 225 "parse.y"
+#line 227 "parse.y"
     {
 
 	}
     break;
 
   case 48:
-#line 229 "parse.y"
+#line 231 "parse.y"
     {
 
 }
     break;
 
   case 49:
-#line 234 "parse.y"
-    {
-
-	}
-    break;
-
-  case 50:
 #line 236 "parse.y"
     {
 
 	}
     break;
 
-  case 51:
-#line 243 "parse.y"
+  case 50:
+#line 238 "parse.y"
     {
 
 	}
     break;
 
-  case 52:
+  case 51:
 #line 245 "parse.y"
     {
 
 	}
     break;
 
+  case 52:
+#line 247 "parse.y"
+    {
+
+	}
+    break;
+
   case 53:
-#line 253 "parse.y"
+#line 255 "parse.y"
     {
 
 	}
     break;
 
   case 54:
-#line 256 "parse.y"
+#line 258 "parse.y"
     {
 
 	}
     break;
 
   case 55:
-#line 262 "parse.y"
+#line 264 "parse.y"
     {
 
 	}
     break;
 
   case 56:
-#line 265 "parse.y"
+#line 267 "parse.y"
     {
 
 	}
     break;
 
   case 57:
-#line 271 "parse.y"
+#line 273 "parse.y"
     {
 
 	}
     break;
 
   case 58:
-#line 277 "parse.y"
+#line 279 "parse.y"
     {
 
 	}
     break;
 
   case 59:
-#line 283 "parse.y"
+#line 285 "parse.y"
     {
 
 	}
     break;
 
   case 60:
-#line 289 "parse.y"
+#line 291 "parse.y"
     {
 
 	}
     break;
 
   case 61:
-#line 292 "parse.y"
+#line 294 "parse.y"
     {
 
 	}
     break;
 
   case 62:
-#line 298 "parse.y"
+#line 300 "parse.y"
     {
 
 	}
     break;
 
   case 63:
-#line 301 "parse.y"
+#line 303 "parse.y"
     {
 
         }
     break;
 
   case 64:
-#line 308 "parse.y"
+#line 310 "parse.y"
     {
 
 	}
     break;
 
   case 65:
-#line 314 "parse.y"
+#line 316 "parse.y"
     {
 
 	}
     break;
 
   case 66:
-#line 321 "parse.y"
+#line 323 "parse.y"
     {
 
 	}
     break;
 
   case 67:
-#line 327 "parse.y"
+#line 329 "parse.y"
     {
 
 	}
     break;
 
   case 68:
-#line 330 "parse.y"
+#line 332 "parse.y"
     {
 
 	}
     break;
 
   case 69:
-#line 336 "parse.y"
+#line 338 "parse.y"
     {
 
 	}
     break;
 
   case 70:
-#line 339 "parse.y"
+#line 341 "parse.y"
     {
 
 	}
     break;
 
   case 71:
-#line 345 "parse.y"
+#line 347 "parse.y"
     {
 
 	}
     break;
 
   case 72:
-#line 348 "parse.y"
+#line 350 "parse.y"
     {
 
 	}
     break;
 
   case 73:
-#line 351 "parse.y"
+#line 353 "parse.y"
     {
 
 	}
     break;
 
   case 74:
-#line 354 "parse.y"
+#line 356 "parse.y"
     {
 
 	}
     break;
 
   case 75:
-#line 360 "parse.y"
+#line 362 "parse.y"
     {
 
 	}
     break;
 
   case 76:
-#line 363 "parse.y"
+#line 365 "parse.y"
     {
 
 	}
     break;
 
   case 77:
-#line 368 "parse.y"
+#line 370 "parse.y"
     {
 
     }
     break;
 
   case 78:
-#line 371 "parse.y"
+#line 373 "parse.y"
     {
 
     }
     break;
 
   case 79:
-#line 374 "parse.y"
+#line 376 "parse.y"
     {
 
     }
     break;
 
   case 80:
-#line 380 "parse.y"
+#line 382 "parse.y"
     {
 
 	}
     break;
 
   case 81:
-#line 383 "parse.y"
+#line 385 "parse.y"
     {
 
 	}
     break;
 
   case 82:
-#line 386 "parse.y"
+#line 388 "parse.y"
     {
 
 	}
     break;
 
   case 83:
-#line 390 "parse.y"
+#line 392 "parse.y"
     {
 
 }
     break;
 
   case 84:
-#line 394 "parse.y"
+#line 396 "parse.y"
     {
 
 }
     break;
 
   case 85:
-#line 399 "parse.y"
+#line 401 "parse.y"
     {
 
 	}
     break;
 
   case 86:
-#line 402 "parse.y"
+#line 404 "parse.y"
     {
 
 	}
     break;
 
   case 87:
-#line 408 "parse.y"
-    {
-
-	}
-    break;
-
-  case 88:
 #line 410 "parse.y"
     {
 
 	}
     break;
 
+  case 88:
+#line 412 "parse.y"
+    {
+
+	}
+    break;
+
   case 89:
-#line 416 "parse.y"
+#line 418 "parse.y"
     {
 
 	}
     break;
 
   case 90:
-#line 419 "parse.y"
+#line 421 "parse.y"
     {
 
 	}
     break;
 
   case 91:
-#line 425 "parse.y"
+#line 427 "parse.y"
     {
 
 	}
     break;
 
   case 92:
-#line 428 "parse.y"
+#line 430 "parse.y"
     {
 
   	}
     break;
 
   case 93:
-#line 431 "parse.y"
+#line 433 "parse.y"
     {
 
   	}
     break;
 
   case 94:
-#line 435 "parse.y"
+#line 437 "parse.y"
     {
 
 	}
     break;
 
   case 95:
-#line 441 "parse.y"
+#line 443 "parse.y"
     {
 
 	}
     break;
 
   case 96:
-#line 444 "parse.y"
+#line 446 "parse.y"
     {
 
 	}
     break;
 
   case 97:
-#line 449 "parse.y"
+#line 451 "parse.y"
     {
 
 	}
     break;
 
   case 98:
-#line 452 "parse.y"
+#line 454 "parse.y"
     {
 
 	}
     break;
 
   case 99:
-#line 458 "parse.y"
+#line 460 "parse.y"
     {
 
 	}
     break;
 
   case 100:
-#line 461 "parse.y"
+#line 463 "parse.y"
     {
 
 	}
     break;
 
   case 101:
-#line 468 "parse.y"
+#line 470 "parse.y"
     {
 
 	}
     break;
 
   case 102:
-#line 471 "parse.y"
+#line 473 "parse.y"
     {
 
 	}
     break;
 
   case 103:
-#line 477 "parse.y"
+#line 479 "parse.y"
     {
 
 	}
     break;
 
   case 104:
-#line 480 "parse.y"
+#line 482 "parse.y"
     {
 
 	}
     break;
 
   case 105:
-#line 486 "parse.y"
+#line 488 "parse.y"
     {
 
  	}
     break;
 
   case 106:
-#line 493 "parse.y"
+#line 495 "parse.y"
     {
 
 	}
     break;
 
   case 107:
-#line 496 "parse.y"
+#line 498 "parse.y"
     {
 
 	}
     break;
 
   case 108:
-#line 503 "parse.y"
+#line 505 "parse.y"
     {
 
 	}
     break;
 
   case 109:
-#line 506 "parse.y"
+#line 508 "parse.y"
     {
 
 	}
@@ -2445,7 +2447,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2449 "y.tab.c"
+#line 2451 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2659,13 +2661,13 @@ yyreturn:
 }
 
 
-#line 510 "parse.y"
+#line 512 "parse.y"
 
 
 int yyerror(char const *str)
 {
     extern char *yytext;
-    fprintf(stderr, "Parser error near %s at line \n", yytext, yylineno);
+    fprintf(stderr, "Parser error near %s at line %d\n", yytext, yylineno);
     return 0;
 }
 

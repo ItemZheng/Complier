@@ -595,10 +595,10 @@ char *yytext;
     *PURPOSE: Flex file for lexical analysis
 */
 #line 10 "lexer.l"
-    #include "y.tab.h"
     #include <string>
-    #include <iostream>
     using namespace std;
+    #include "y.tab.h"
+    #include <iostream>
 
 #line 604 "lex.yy.c"
 

@@ -7,10 +7,10 @@
 
 %option noyywrap
 %{
-    #include "y.tab.h"
     #include <string>
-    #include <iostream>
     using namespace std;
+    #include "y.tab.h"
+    #include <iostream>
 %}
 
 white [ \t\n\r]+
