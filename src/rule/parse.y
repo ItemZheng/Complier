@@ -131,7 +131,10 @@ array_init_list:
 
 expression_list: expression_list COMMA expression {
 
-};
+}
+	| expression{
+
+	};
 
 expression:
 	expression PLUS expression{
@@ -326,7 +329,7 @@ function_statements:
 	;
 
 return_statement:
-	RETURN IDENTIFIER SEMI {
+	RETURN expression SEMI {
 
 	}
 	|  /* EMPTY */ {
@@ -344,7 +347,11 @@ statements:
 	;
 
 statement:
-	iterationStatement {
+	var_declaration{
+
+	}
+
+	| iterationStatement {
 
 	}
 	| selectionStatement {

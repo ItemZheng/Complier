@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 echo -e "\n\n--------- TEST BEGIN ---------"
+rm error.log
 for file in `ls ./test/*`;
 do
 	echo -n "Test $file ............."
-	cat ${file} | (./compiler 2> error.log)
+	cat ${file} | (./compiler 2>> error.log)
 	if [[ $? -ne 0 ]]; then
 		echo ${file} >> error.log
 		echo "  " >> error.log

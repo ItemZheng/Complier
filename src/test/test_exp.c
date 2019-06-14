@@ -1,4 +1,5 @@
-a = 5 + 6;
+int main(){
+    a = 5 + 6;
 b = 5 * 2;
 c = 6 % 3;
 d = 4 / 2;
@@ -22,3 +23,4 @@ w = function();
 x = function(2, 6);
 y = function(4 + 5, 6);
 z = 1;
+}

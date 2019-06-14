@@ -6,6 +6,7 @@
 */
 
 %option noyywrap
+%option yylineno 
 %{
     #include <string>
     using namespace std;

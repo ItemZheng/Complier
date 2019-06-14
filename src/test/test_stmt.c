@@ -2,7 +2,6 @@ int main(){
     //循环语句
     for(int i = 0; i < 6; i++){
         int a = 5;
-        a--;
     }
 
     for(i = 5; i < 6; i++){
