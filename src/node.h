@@ -5,6 +5,7 @@
 #include<vector>
 #include"type.h"
 #include<string>
+
 #ifndef COMPILER_NODE_H
 #define COMPILER_NODE_H
 
@@ -97,6 +98,8 @@ class ProgramNode : Node {
 public:
     vector<DeclarationNode *> *declaration_list;
 public:
+    ProgramNode(vector<DeclarationNode *> *declaration_list);
+
     void visit();
 
     void codeGen();
@@ -106,7 +109,12 @@ class DeclarationNode : Node {
 public:
     FunctionDeclarationNode *functionDeclarationNode;
     VarDeclarationNode *varDeclarationNode;
+
 public:
+    DeclarationNode(FunctionDeclarationNode *functionDeclarationNode);
+
+    DeclarationNode(VarDeclarationNode *varDeclarationNode);
+
     void visit();
 
     void codeGen();
@@ -127,6 +135,10 @@ public:
     FunctionDeclNode *functionDeclNode;
     FunctionBodyNode *functionBodyNode;
 public:
+    FunctionDefinitionNode(FunctionDeclNode *functionDeclNode);
+
+    FunctionDefinitionNode(FunctionBodyNode *functionBodyNode);
+
     void visit();
 
     void codeGen();
@@ -138,6 +150,8 @@ public:
     string identifier;
     vector<FunctionArgNode *> *function_args;
 public:
+    FunctionDeclNode(type_var type, string identifier, vector<FunctionArgNode *> *function_args);
+
     void visit();
 
     void codeGen();
@@ -148,6 +162,8 @@ public:
     type_var type;
     string identifier;
 public:
+    FunctionArgNode(type_var type, string identifier);
+
     void visit();
 
     void codeGen();
@@ -157,6 +173,8 @@ class FunctionBodyNode : Node {
 public:
     FunctionStatementsNode *functionStatementsNode;
 public:
+    FunctionBodyNode(FunctionStatementsNode *functionStatementsNode);
+
     void visit();
 
     void codeGen();
@@ -167,6 +185,8 @@ public:
     vector<StatementNode *> *statements;
     ReturnStatementNode *returnStatementNode;
 public:
+    FunctionStatementsNode(vector<StatementNode *> *statements, ReturnStatementNode *returnStatementNode);
+
     void visit();
 
     void codeGen();
@@ -176,6 +196,8 @@ class ReturnStatementNode : Node {
 public:
     ExpressionVNode *expressionVNode;
 public:
+    ReturnStatementNode(ExpressionVNode *expressionVNode);
+
     void visit();
 
     void codeGen();
@@ -196,6 +218,18 @@ public:
     ExpressionStatementNode *expressionStatementNode;
     JumpStatementNode *jumpStatementNode;
 public:
+    StatementNode();
+
+    StatementNode(VarDeclarationNode *varDeclarationNode);
+
+    StatementNode(IterationStatementNode *iterationStatementNode);
+
+    StatementNode(SelectionStatementNode *selectionStatementNode);
+
+    StatementNode(ExpressionStatementNode *expressionStatementNode);
+
+    StatementNode(JumpStatementNode *jumpStatementNode);
+
     void visit();
 
     void codeGen();
@@ -205,6 +239,8 @@ class ExpressionStatementNode : Node {
 public:
     ExpressionVNode *expressionVNode;
 public:
+    ExpressionStatementNode(ExpressionVNode *expressionVNode);
+
     void visit();
 
     void codeGen();
@@ -223,217 +259,274 @@ public:
     // for do while
     CompoundStatementNode *compoundStatementNode;
     // for for-loop
-    ForConditionNode forConditionNode;
+    ForConditionNode *forConditionNode;
 public:
+    IterationStatementNode();
+
+    IterationStatementNode(ExpressionVNode *expressionVNode, LoopBodyNode *loopBodyNode);
+
+    IterationStatementNode(CompoundStatementNode *compoundStatementNode, ExpressionVNode *expressionVNode);
+
+    IterationStatementNode(ForConditionNode *forConditionNode, LoopBodyNode *loopBodyNode);
+
     void visit();
 
     void codeGen();
 };
 
-class LoopBodyNode : Node{
+class LoopBodyNode : Node {
 public:
     StatementNode *statementNode;
     CompoundStatementNode *compoundStatementNode;
 public:
+    LoopBodyNode(StatementNode *statementNode);
+
+    LoopBodyNode(CompoundStatementNode *compoundStatementNode);
+
     void visit();
 
     void codeGen();
 };
 
-class CompoundStatementNode : Node{
+class CompoundStatementNode : Node {
 public:
     vector<StatementNode *> statements;
 public:
+    CompoundStatementNode( vector<StatementNode *> statements);
+
     void visit();
 
     void codeGen();
 };
 
-class ForConditionNode : Node{
+class ForConditionNode : Node {
 public:
     ForInitListNode *forInitListNode;
     ExpressionVNode *forExpression;
     vector<ExpressionVNode *> *incrementExpressionList;
 public:
+    ForConditionNode(ForInitListNode *forInitListNode, ExpressionVNode *forExpression, vector<ExpressionVNode *> *incrementExpressionList);
+
     void visit();
 
     void codeGen();
 };
 
-class ForInitListNode :Node{
+class ForInitListNode : Node {
 public:
     vector<ExpressionVNode *> *expressionList;
     ForDeclarationNode *forDeclarationNode;
 public:
+    ForInitListNode();
+
+    ForInitListNode(vector<ExpressionVNode *> *expressionList);
+
+    ForInitListNode(ForDeclarationNode *forDeclarationNode);
+
     void visit();
 
     void codeGen();
 };
 
-class ForDeclarationNode : Node{
+class ForDeclarationNode : Node {
 public:
     type_var type;
-    vector <VarDeclNode *> *varDeclarationList;
+    vector<VarDeclNode *> *varDeclarationList;
 public:
+    ForDeclarationNode(type_var type, vector<VarDeclNode *> *varDeclarationList);
+
     void visit();
 
     void codeGen();
 };
 
-class JumpStatementNode : Node{
+class JumpStatementNode : Node {
 public:
     const int TYPE_CONTINUE = 0;
     const int TYPE_BREAK = 1;
 public:
     int type;
 public:
+    JumpStatementNode(int type);
+
     void visit();
 
     void codeGen();
 };
 
-class VarDeclarationNode : public Node{
-    public:
-        type_var type;
-        vector<VarDeclNode*> * var_declaration_list; 
-    public:
-        void visit();
-        void codeGen();
+class VarDeclarationNode : public Node {
+public:
+    type_var type;
+    vector<VarDeclNode *> *var_declaration_list;
+public:
+    void visit();
+
+    void codeGen();
 }
 
-class VarDeclNode : public Node{
-    public:
-        type_identifier type;
-        std::string * identifier;
-        ArrayIdentifierNode * array_identifier;
-        int assign;
-        ExpressionVNode * expressionv;
-        ArrayInitNode * array_init;
-    public:
-        void visit();
-        void codeGen();
+class VarDeclNode : public Node {
+public:
+    type_identifier type;
+    std::string *identifier;
+    ArrayIdentifierNode *array_identifier;
+    int assign;
+    ExpressionVNode *expressionv;
+    ArrayInitNode *array_init;
+public:
+    void visit();
+
+    void codeGen();
 }
 
-class ArrayIdentifierNode : public Node{
-    public:
-        std::string * identifier;
-        int size;
-        int index;
-    public:
-        void visit();
-        void codeGen();
+class ArrayIdentifierNode : public Node {
+public:
+    std::string *identifier;
+    int size;
+    int index;
+public:
+    void visit();
+
+    void codeGen();
 }
 
-class ArrayInitNode : public Node{
-    public:
-        vector<ArrayInitNode *> * array_init;
-        vector<ExpressionVNode *> * expressionvs;
-    public:
-        void visit();
-        void codeGen();
+class ArrayInitNode : public Node {
+public:
+    vector<ArrayInitNode *> *array_init;
+    vector<ExpressionVNode *> *expressionvs;
+public:
+    void visit();
+
+    void codeGen();
 }
 
-class ExpressionVNode : public Node{
-    public:
-        vector<VarNode *> var_list;
-        ExpressionNode * expression;
-    public:
-        void visit();
-        void codeGen();
+class ExpressionVNode : public Node {
+public:
+    vector<VarNode *> var_list;
+    ExpressionNode *expression;
+public:
+    void visit();
+
+    void codeGen();
 }
 
-class VarNode : public Node{
-    public:
-        type_identifier type;
-        std::string * identifier;
-        ArrayIdentifierNode * array_identifier;
-    public:
-        void visit();
-        void codeGen();
+class VarNode : public Node {
+public:
+    type_identifier type;
+    std::string *identifier;
+    ArrayIdentifierNode *array_identifier;
+public:
+    void visit();
+
+    void codeGen();
 }
 
-class ExpressionNode : public Node{
-    public:
-        type_expression type;
-        ExpressionNode * left;
-        ExpressionNode * right;
-        VarNode * var;
-        ConstantNode * constant;
-        CallNode * call;
-    public:
-        void visit();
-        void codeGen();
+class ExpressionNode : public Node {
+public:
+    type_expression type;
+    ExpressionNode *left;
+    ExpressionNode *right;
+    VarNode *var;
+    ConstantNode *constant;
+    CallNode *call;
+public:
+    void visit();
+
+    void codeGen();
 }
 
-class ConstantNode : public Node{
-    public:
-        type_var type;
-        int integer;
-        double double_number;
-        char character;
-    public:
-        void visit();
-        void codeGen();
+class ConstantNode : public Node {
+public:
+    type_var type;
+    int integer;
+    double double_number;
+    char character;
+public:
+    void visit();
+
+    void codeGen();
 }
 
-class CallNode : public Node{
-    public:
-        std::string * identifier;
-        vector<ExpressionVNode *> * args;
-    public:
-        void visit();
-        void codeGen();
+class CallNode : public Node {
+public:
+    std::string *identifier;
+    vector<ExpressionVNode *> *args;
+public:
+    void visit();
+
+    void codeGen();
 }
-class SelectionStatementNode :Node{
+
+class SelectionStatementNode : Node {
 public:
     IfStatementNode *ifStatementNode;
     SwitchStatementNode *switchStatementNode;
 public:
+    SelectionStatementNode(IfStatementNode *ifStatementNode);
+
+    SelectionStatementNode(SwitchStatementNode *switchStatementNode);
+
     void visit();
 
     void codeGen();
 };
 
 
-class IfStatementNode :Node{
+class IfStatementNode : Node {
 public:
     ExpressionVNode *expressionVNode;
     IfBodyNode *ifBodyNode;
     IfBodyNode *elseBodyNode;
 public:
+    IfStatementNode(ExpressionVNode *expressionVNode, IfBodyNode *ifBodyNode);
+
+    IfStatementNode(ExpressionVNode *expressionVNode, IfBodyNode *ifBodyNode, IfBodyNode *elseBodyNode);
+
     void visit();
 
     void codeGen();
 };
 
-class IfBodyNode :Node{
+class IfBodyNode : Node {
 public:
     CompoundStatementNode *compoundStatementNode;
     StatementNode *statementNode;
 public:
+    IfBodyNode(CompoundStatementNode *compoundStatementNode);
+
+    IfBodyNode(StatementNode *statementNode);
+
     void visit();
+
     void codeGen();
 };
 
-class SwitchStatementNode :Node{
+class SwitchStatementNode : Node {
 public:
     ExpressionVNode *expressionVNode;
-    vector<LabeledStatementNode*> *labeledStatementList;
+    vector<LabeledStatementNode *> *labeledStatementList;
 public:
-    void visit();
-    void codeGen();
- };
+    SwitchStatementNode(ExpressionVNode *expressionVNode, vector<LabeledStatementNode *> *labeledStatementList);
 
-class LabeledStatementNode:Node{
+    void visit();
+
+    void codeGen();
+};
+
+class LabeledStatementNode : Node {
 public:
     const int TYPE_CASE = 0;
     const int TYPE_DEFAULT = 0;
 public:
     int type;
     ConstantNode *constantNode;
-    vector<StatementNode*> *statements;
+    vector<StatementNode *> *statements;
 public:
+    LabeledStatementNode(ConstantNode *constantNode, vector<StatementNode *> *statements);
+
+    LabeledStatementNode(vector<StatementNode *> *statements);
+
     void visit();
+
     void codeGen();
 };
 
