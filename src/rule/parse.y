@@ -528,6 +528,8 @@ int yyerror(char const *str)
 
 int main(void)
 {
+//	# define YYDEBUG 1
+//	yydebug = 1;
     yyin = stdin;
     if (yyparse()) {
         exit(1);

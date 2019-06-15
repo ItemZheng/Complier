@@ -1,3 +1,4 @@
 cmake-build-debug/*
 .idea/*
 src/lex.yy.c
+CMakeLists.txt
