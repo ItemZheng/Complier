@@ -295,8 +295,10 @@ public:
 class VarDeclarationNode : public Node{
     public:
         type_var type;
-        vector<VarDeclNode*> * var_declaration_list; 
+        vector<VarDeclNode *> * var_declaration_list; 
     public:
+        VarDeclarationNode(type_var type, vector<VarDeclNode *> * vdl);
+        ~VarDeclarationNode()
         void visit();
         void codeGen();
 }
@@ -310,6 +312,10 @@ class VarDeclNode : public Node{
         ExpressionVNode * expressionv;
         ArrayInitNode * array_init;
     public:
+        VarDeclNode(type_identifier type, string * identifier, 
+        ArrayIdentifierNode * array_identifier, int assign, ExpressiionVNode * expressionv,
+        ArrayInitNode * array_init)
+        ~VarDeclNode();
         void visit();
         void codeGen();
 }
@@ -320,6 +326,8 @@ class ArrayIdentifierNode : public Node{
         int size;
         int index;
     public:
+        ArrayIdentifierNode(string * identifier, int size);
+        ~ArrayIdentifierNode();
         void visit();
         void codeGen();
 }
@@ -329,15 +337,20 @@ class ArrayInitNode : public Node{
         vector<ArrayInitNode *> * array_init;
         vector<ExpressionVNode *> * expressionvs;
     public:
+        ArrayInitNode(vector<ArrayInitNode *> * array_init,
+        vector<ExpressiionVNode *> * expressionvs);
+        ~ArrayInitNode();
         void visit();
         void codeGen();
 }
 
 class ExpressionVNode : public Node{
     public:
-        vector<VarNode *> var_list;
+        vector<VarNode *> * var_list;
         ExpressionNode * expression;
     public:
+        ExpressiionVNode(vector<VarNode *> * var_list, ExpressionNode * expression);
+        ~ExpressionVNode()
         void visit();
         void codeGen();
 }
@@ -348,6 +361,8 @@ class VarNode : public Node{
         std::string * identifier;
         ArrayIdentifierNode * array_identifier;
     public:
+        VarNode(type_identifier type, string * identifier, ArrayIdentifierNode * array_identifier);
+        ~VarNode();
         void visit();
         void codeGen();
 }
@@ -361,6 +376,9 @@ class ExpressionNode : public Node{
         ConstantNode * constant;
         CallNode * call;
     public:
+        ExpressionNode(type_expression type, ExpressionNode * left, ExpressionNode * right,
+        VarNode * var, ConstantNode * constant, CallNode * call);
+        ~ExpressionNode();
         void visit();
         void codeGen();
 }
@@ -372,6 +390,8 @@ class ConstantNode : public Node{
         double double_number;
         char character;
     public:
+        ConstantNode(type_var type, int integer, double double_number, char character);
+        ~ConstantNode();
         void visit();
         void codeGen();
 }
@@ -381,6 +401,8 @@ class CallNode : public Node{
         std::string * identifier;
         vector<ExpressionVNode *> * args;
     public:
+        CallNode(string * identifier, vector<ExpressionVNode *> * args);
+        ~CallNode();
         void visit();
         void codeGen();
 }
