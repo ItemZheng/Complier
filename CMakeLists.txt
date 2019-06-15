@@ -3,4 +3,4 @@ project(Compiler)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Compiler main.cpp)
+add_executable(Compiler main.cpp src/node.h src/test.c)

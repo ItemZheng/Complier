@@ -3,7 +3,7 @@ Compiler: ./rule/parse.y ./rule/lexer.l
 	flex ./rule/lexer.l
 	g++ lex.yy.c y.tab.c -o compiler
 
-test:	./*
+test:Compiler
 	make
 	./test.sh
 
