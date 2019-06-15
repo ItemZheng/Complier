@@ -13,6 +13,8 @@ extern char *yytext;
 extern int yylineno;
 extern FILE *yyin;
 
+ProgramNode * root = NULL;
+
 %}
 %union {
     std::string  *str;
@@ -25,15 +27,29 @@ extern FILE *yyin;
     vector<ArrayInitNode *> *array_init;
     vector<VarNode *> *var_list;
     vector<LabeledStatementNode *> *labeledStatementList;
+    type_var type;
 }
 %token INT LONG FLOAT SHORT VOID DOUBLE CHAR UNSIGNED CONST SIGNED STRUCT UNION ENUM VOLATILE
 %token IF ELSE SWITCH GOTO CASE DO WHILE FOR CONTINUE BREAK RETURN DEFAULT TYPEDEF
 %token AUTO REGISTER EXTERN STATIC
 %token SIZEOF
-%token IDENTIFIER INTEGER DOUBLE_NUMBER CHARACTER STRING SINGLE_COMMENT COMMENTS COLON
+%token INTEGER DOUBLE_NUMBER CHARACTER STRING SINGLE_COMMENT COMMENTS COLON
 %token LEFT_PAREN RIGHT_PAREN LEFT_BRACKET RIGHT_BRACKET LEFT_BRACE RIGHT_BRACE LESS LESS_EQUAL GREATER GREATER_EQUAL
 %token PLUS PLUS_PLUS MINUS MINUS_MINUS DIV MOD MUL AND_AND OR_OR EQUAL NOT_EQUAL NOT COMMA SEMI ASSIGN
-// %type <>  TODO
+%token <str> IDENTIFIER
+
+%type <node> program function_declaration var_declaration function_decl function_definition
+%type <node> declaration function_body function_arg function_statements return_statement
+%type <node> expressionv statement iterationStatement selectionStatement expressionStatement jumpStatement
+%type <node> loopBody compoundStatement forCondition forInitList forExpression constant
+%type <node> forDeclaration ifStatement switchStatement labeledStatement ifBody
+%type <declaration_list> declaration_list
+%type <type> type
+%type <function_args> function_args function_arg_list
+%type <statements> statements
+%type <incrementExpressionList> incrementExpressionList expression_list
+%type <varDeclarationList> var_declaration_list
+%type <labeledStatementList> labeledStatementList
 
 %nonassoc IFX
 %nonassoc ELSE
@@ -56,15 +72,18 @@ extern FILE *yyin;
 program:
     	declaration_list {
 		// create root
+		root = new ProgramNode($1);
 	}
 	;
 
 declaration_list:
  	declaration_list declaration {
-
+		$1->push_back((DeclarationNode *)$2);
+		$$ = $1;
  	}
  	| declaration  {
-
+		 $$ = new vector<DeclarationNode *>();
+		 $$->push_back((DeclarationNode *)$1);
  	}
 	;
 
@@ -280,248 +299,251 @@ args_list:
 
 declaration:
 	function_declaration {
-
+		$$ = new DeclarationNode((FunctionDeclarationNode *)$1);
 	}
 	| var_declaration {
-
+		$$ = new DeclarationNode((VarDeclarationNode *)$1);
 	}
 	;
 
 function_declaration:
 	function_decl SEMI {
-
+		$$ = new FunctionDeclarationNode((FunctionDeclNode *) $1);
 	}
 	| function_definition {
-
+		$$ = new FunctionDeclarationNode((FunctionDefinitionNode *)$1);
 	}
 	;
 
 function_definition:
 	function_decl function_body {
-
+		$$ = new FunctionDefinitionNode((FunctionDeclNode *)$1, (FunctionBodyNode *)$2);
 	}
 	;
 
 function_decl:
 	type IDENTIFIER LEFT_PAREN function_args RIGHT_PAREN {
-
+		$$ = new FunctionDeclNode($1, *$2, $4);
 	}
 	;
 
 function_args:
 	function_arg_list {
-
+		$$ = $1;
 	}
 	|  /* EMPTY */ {
-
+		$$ = NULL;
 	}
 	;
 
 function_arg_list:
 	function_arg {
-
+		$$ = new vector<FunctionArgNode *>();
+		$$->push_back((FunctionArgNode *)$1);
 	}
 	|  function_arg COMMA function_arg_list {
-
+		$3->push_back((FunctionArgNode *)$1);
+		$$ = $3;
         }
         ;
 
 
 function_arg:
 	type IDENTIFIER {
-
+		$$ = new FunctionArgNode($1, *$2);
 	}
 	;
 
 function_body:
 	LEFT_BRACE function_statements RIGHT_BRACE {
-
+		$$ = new FunctionBodyNode((FunctionStatementsNode *) $2);
 	}
 	;
 
 
 function_statements:
 	statements return_statement {
-
+		$$ = new FunctionStatementsNode($1, (ReturnStatementNode *)$2);
 	}
 	;
 
 return_statement:
 	RETURN expressionv SEMI {
-
+		$$ = new ReturnStatementNode((ExpressionVNode *)$2);
 	}
 	|  /* EMPTY */ {
-
+		$$ = NULL;
 	}
         ;
 
 statements:
  	statement statements {
-
+		if($2 == NULL) {
+			$$ = new vector<StatementNode *>();
+		} else {
+			$$ = $2;
+		}
+		$$->push_back((StatementNode *) $1);
 	}
 	|  /* EMPTY */ {
-
+		$$ = NULL;
 	}
 	;
 
 statement:
 	var_declaration{
-
+		$$ = new StatementNode((VarDeclarationNode *)$1);
 	}
-
 	| iterationStatement {
-
+		$$ = new StatementNode((IterationStatementNode *)$1);
 	}
 	| selectionStatement {
-
+		$$ = new StatementNode((SelectionStatementNode *)$1);
 	}
 	| expressionStatement {
-
+		$$ = new StatementNode((ExpressionStatementNode *)$1);
 	}
 	| jumpStatement {
-
+		$$ = new StatementNode((JumpStatementNode *)$1);
 	}
 	;
 
 expressionStatement:
 	expressionv SEMI {
-
+		$$ = new ExpressionStatementNode((ExpressionVNode *)$1);
 	}
 	| SEMI {
-
+		$$ = NULL;
 	};
 
 iterationStatement:
     WHILE LEFT_PAREN expressionv RIGHT_PAREN loopBody {
-
+	$$ = new IterationStatementNode((ExpressionVNode *)$3, (LoopBodyNode *)$5);
     }
     | 	DO compoundStatement WHILE LEFT_PAREN expressionv RIGHT_PAREN SEMI {
-
+	$$ = new IterationStatementNode((CompoundStatementNode *)$2, (ExpressionVNode *)$5);
     }
     |   FOR LEFT_PAREN forCondition RIGHT_PAREN loopBody {
-
+	$$ = new IterationStatementNode((ForConditionNode *)$3, (LoopBodyNode *)$5);
     }
     ;
 
 loopBody:
 	statement{
-
+		$$ = new LoopBodyNode((StatementNode *)$1);
 	}
 	| compoundStatement {
-
+		$$ = new LoopBodyNode((CompoundStatementNode *)$1);
 	}
 	;
 
 compoundStatement: LEFT_BRACE statements RIGHT_BRACE {
-
+	$$ = new CompoundStatementNode($2);
 } ;
 
 forCondition: forInitList SEMI forExpression SEMI incrementExpressionList {
-
+	$$ = new ForConditionNode((ForInitListNode *)$1, (ExpressionVNode *) $3, $5);
 };
 
 forExpression:
 	expressionv {
-
+		$$ = $1;
 	}
 	| /*Empty*/ {
-
+		$$ = NULL;
 	}
 	;
 
 incrementExpressionList:
 	expression_list {
-
+		$$ = $1;
 	}| /*Empty*/ {
-
+		$$ = NULL;
 	}
 	;
 
 
 forInitList :
 	 /*Empty*/ {
-
+		$$ = NULL;
 	}
   	| forDeclaration {
-
+		$$ = new ForInitListNode((ForDeclarationNode *)$1);
   	}
   	| expression_list {
-
+		$$ = new ForInitListNode($1);
   	};
 
 forDeclaration: type var_declaration_list {
-
+		$$ = new ForDeclarationNode($1, $2);
 	}
 	;
 
 jumpStatement:
 	CONTINUE SEMI {
-
+		$$ = new JumpStatementNode(JumpStatementNode::TYPE_CONTINUE);
 	}
 	| BREAK SEMI {
-
+		$$ = new JumpStatementNode(JumpStatementNode::TYPE_BREAK);
 	};
 
 selectionStatement:
 	ifStatement {
-
+		$$ = new SelectionStatementNode((IfStatementNode *)$1);
 	}
 	| switchStatement {
-
+		$$ = new SelectionStatementNode((SwitchStatementNode *)$1);
 	};
 
 // Bison 应该会优先选择shift，所以这里没有二义性
 ifStatement :
 	IF LEFT_PAREN expressionv RIGHT_PAREN ifBody %prec IFX{
-
+		$$ = new IfStatementNode((ExpressionVNode *)$3, (IfBodyNode *)$5);
 	}
-	|  IF LEFT_PAREN expressionv RIGHT_PAREN ifBody ELSE elseBody {
-
+	|  IF LEFT_PAREN expressionv RIGHT_PAREN ifBody ELSE ifBody {
+		$$ = new IfStatementNode((ExpressionVNode *)$3, (IfBodyNode *)$5, (IfBodyNode *)$7);
 	}
 	;
 
 // 检查 continue/break 位置是否合法
 ifBody:
 	compoundStatement {
-
+		$$ = new IfBodyNode((CompoundStatementNode *)$1);
 	}
 	| statement {
-
+		$$ = new IfBodyNode((StatementNode *)$1);
 	}
 	;
 
-elseBody:
-	compoundStatement{
-
-	}
-	| statement {
-
-	}
-	;
 
 switchStatement:
  	SWITCH LEFT_PAREN expressionv RIGHT_PAREN LEFT_BRACE labeledStatementList RIGHT_BRACE {
-
+		$$ = new SwitchStatementNode((ExpressionVNode *)$3, $6);
  	}
  	;
 
 
 labeledStatementList:
 	labeledStatement labeledStatementList {
-
+		if($2 == NULL){
+			$$ = new vector<LabeledStatementNode *>();
+		} else {
+			$$ = $2;
+		}
+		$$->push_back((LabeledStatementNode *)$1);
 	}
 	| /*EMPTY*/ {
-
+		$$ = NULL;
 	}
 
 
 // 检查单个switch是否存在相同的label
 labeledStatement :
 	CASE constant COLON statements {
-
+		$$ = new LabeledStatementNode((ConstantNode *)$2, $4);
 	}
 	| DEFAULT COLON statements {
-
+		$$ = new LabeledStatementNode($3);
 	};
 
 %%

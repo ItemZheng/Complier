@@ -61,19 +61,24 @@ DeclarationNode::DeclarationNode(VarDeclarationNode *varDeclarationNode) {
     this->functionDeclarationNode = NULL;
 }
 
+FunctionDeclarationNode::FunctionDeclarationNode(FunctionDeclNode *functionDeclNode) {
+    this->functionDeclNode = functionDeclNode;
+    this->functionDefinitionNode = NULL;
+}
+
+FunctionDeclarationNode::FunctionDeclarationNode(FunctionDefinitionNode *functionDefinitionNode) {
+    this->functionDefinitionNode = functionDefinitionNode;
+    this->functionDeclNode = NULL;
+}
+
 DeclarationNode::DeclarationNode(FunctionDeclarationNode *functionDeclarationNode) {
     this->functionDeclarationNode = functionDeclarationNode;
     this->varDeclarationNode = NULL;
 }
 
-FunctionDefinitionNode::FunctionDefinitionNode(FunctionBodyNode *functionBodyNode) {
+FunctionDefinitionNode::FunctionDefinitionNode(FunctionDeclNode *functionDeclNode, FunctionBodyNode *functionBodyNode) {
     this->functionBodyNode = functionBodyNode;
-    this->functionDeclNode = NULL;
-}
-
-FunctionDefinitionNode::FunctionDefinitionNode(FunctionDeclNode *functionDeclNode) {
     this->functionDeclNode = functionDeclNode;
-    this->functionBodyNode = NULL;
 }
 
 FunctionDeclNode::FunctionDeclNode(type_var type, string identifier, vector<FunctionArgNode *> *function_args) {
@@ -182,7 +187,7 @@ LoopBodyNode::LoopBodyNode(CompoundStatementNode *compoundStatementNode) {
     this->statementNode = NULL;
 }
 
-CompoundStatementNode::CompoundStatementNode(vector<StatementNode *> statements) {
+CompoundStatementNode::CompoundStatementNode(vector<StatementNode *> *statements) {
     this->statements = statements;
 }
 
