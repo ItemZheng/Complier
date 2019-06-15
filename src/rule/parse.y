@@ -388,7 +388,7 @@ iterationStatement:
     WHILE LEFT_PAREN expressionv RIGHT_PAREN loopBody {
 
     }
-    | 	DO compoundStatement WHILE LEFT_PAREN expression RIGHT_PAREN SEMI {
+    | 	DO compoundStatement WHILE LEFT_PAREN expressionv RIGHT_PAREN SEMI {
 
     }
     |   FOR LEFT_PAREN forCondition RIGHT_PAREN loopBody {
