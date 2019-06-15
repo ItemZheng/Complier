@@ -1,4 +1,5 @@
 %{
+#include "node.h"
 #include <math.h>
 #include <string>
 #include <iostream>
@@ -14,10 +15,16 @@ extern FILE *yyin;
 
 %}
 %union {
-    int          int_value;
-    double       double_value;
     std::string  *str;
-    // TODO
+    Node  *node;
+    vector<DeclarationNode *> *declaration_list;
+    vector<FunctionArgNode *> *function_args;
+    vector<StatementNode *> *statements;
+    vector<ExpressionVNode *> *incrementExpressionList;
+    vector<VarDeclNode *> *varDeclarationList;
+    vector<ArrayInitNode *> *array_init;
+    vector<VarNode *> *var_list;
+    vector<LabeledStatementNode *> *labeledStatementList;
 }
 %token INT LONG FLOAT SHORT VOID DOUBLE CHAR UNSIGNED CONST SIGNED STRUCT UNION ENUM VOLATILE
 %token IF ELSE SWITCH GOTO CASE DO WHILE FOR CONTINUE BREAK RETURN DEFAULT TYPEDEF

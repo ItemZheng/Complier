@@ -8,6 +8,7 @@
 %option noyywrap
 %option yylineno 
 %{
+	#include "node.h"
     #include <string>
     using namespace std;
     #include "y.tab.h"

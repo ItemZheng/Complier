@@ -8,13 +8,13 @@
 #include "stdlib.h"
 
 typedef enum{
-    INT,
-    LONG,
-    FLOAT,
-    SHORT,
-    VOID,
-    DOUBLE,
-    CHAR
+    TYPE_INT,
+    TYPE_LONG,
+    TYPE_FLOAT,
+    TYPE_SHORT,
+    TYPE_VOID,
+    TYPE_DOUBLE,
+    TYPE_CHAR
 } type_var;
 
 typedef enum{
@@ -23,25 +23,25 @@ typedef enum{
 } type_identifier;
 
 typedef enum{
-    PLUS,
-    MINUS,
-    MUL,
-    DIV,
-    MOD,
-    LESS,
-    LESS_EQUAL,
-    GREATER,
-    GREATER_EQUAL,
-    AND_AND,
-    OR_OR,
-    NOT,
-    EQUAL,
-    NOT_EQUAL,
-    MINUS_SIGN,
-    PLUS_PLUS_L,
-    PLUS_PLUS_R,
-    MINUS_MINUS_L,
-    MINUS_MINUS_R
+    EXP_PLUS,
+    EXP_MINUS,
+    EXP_MUL,
+    EXP_DIV,
+    EXP_MOD,
+    EXP_LESS,
+    EXP_LESS_EQUAL,
+    EXP_GREATER,
+    EXP_GREATER_EQUAL,
+    EXP_AND_AND,
+    EXP_OR_OR,
+    EXP_NOT,
+    EXP_EQUAL,
+    EXP_NOT_EQUAL,
+    EXP_MINUS_SIGN,
+    EXP_PLUS_PLUS_L,
+    EXP_PLUS_PLUS_R,
+    EXP_MINUS_MINUS_L,
+    EXP_MINUS_MINUS_R
 } type_expression;
 
 #endif

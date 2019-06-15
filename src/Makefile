@@ -1,7 +1,7 @@
-Compiler: ./rule/parse.y ./rule/lexer.l
+Compiler: ./rule/parse.y ./rule/lexer.l ./node.cpp ./node.h ./type.h
 	yacc -d -v ./rule/parse.y
 	flex ./rule/lexer.l
-	g++ lex.yy.c y.tab.c -o compiler
+	g++ node.cpp lex.yy.c y.tab.c -o compiler
 
 test:Compiler
 	make
