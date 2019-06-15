@@ -1,0 +1,3087 @@
+Terminals unused in grammar
+
+   UNSIGNED
+   CONST
+   SIGNED
+   STRUCT
+   UNION
+   ENUM
+   VOLATILE
+   GOTO
+   TYPEDEF
+   AUTO
+   REGISTER
+   EXTERN
+   STATIC
+   SIZEOF
+   SINGLE_COMMENT
+   COMMENTS
+   STRING
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: declaration_list
+
+    2 declaration_list: declaration_list declaration
+    3                 | declaration
+
+    4 var_declaration: type var_declaration_list SEMI
+
+    5 type: INT
+    6     | DOUBLE
+    7     | FLOAT
+    8     | VOID
+    9     | LONG
+   10     | SHORT
+   11     | CHAR
+
+   12 var_declaration_list: var_declaration_list COMMA var_decl
+   13                     | var_decl
+
+   14 var_decl: IDENTIFIER
+   15         | IDENTIFIER ASSIGN expressionv
+   16         | array_identifier
+   17         | array_identifier ASSIGN array_init
+
+   18 array_identifier: IDENTIFIER LEFT_BRACKET INTEGER RIGHT_BRACKET
+
+   19 array_access: IDENTIFIER LEFT_BRACKET INTEGER RIGHT_BRACKET
+
+   20 array_init: LEFT_BRACE array_init_list RIGHT_BRACE
+   21           | LEFT_BRACE expression_list RIGHT_BRACE
+
+   22 array_init_list: array_init_list COMMA array_init
+   23                | array_init
+
+   24 expression_list: expression_list COMMA expressionv
+   25                | expressionv
+
+   26 expressionv: var ASSIGN expressionv
+   27            | expression
+
+   28 expression: expression PLUS expression
+   29           | expression MINUS expression
+   30           | expression MUL expression
+   31           | expression DIV expression
+   32           | expression MOD expression
+   33           | LEFT_PAREN expressionv RIGHT_PAREN
+   34           | expression LESS expression
+   35           | expression LESS_EQUAL expression
+   36           | expression GREATER expression
+   37           | expression GREATER_EQUAL expression
+   38           | expression AND_AND expression
+   39           | expression OR_OR expression
+   40           | NOT expression
+   41           | expression EQUAL expression
+   42           | expression NOT_EQUAL expression
+   43           | MINUS expression
+   44           | PLUS_PLUS var
+   45           | var PLUS_PLUS
+   46           | MINUS_MINUS var
+   47           | var MINUS_MINUS
+   48           | var
+   49           | call
+   50           | constant
+
+   51 var: IDENTIFIER
+   52    | array_access
+
+   53 constant: INTEGER
+   54         | DOUBLE_NUMBER
+   55         | CHARACTER
+
+   56 call: IDENTIFIER LEFT_PAREN args RIGHT_PAREN
+
+   57 args: args_list
+   58     | %empty
+
+   59 args_list: args_list COMMA expressionv
+   60          | expressionv
+
+   61 declaration: function_declaration
+   62            | var_declaration
+
+   63 function_declaration: function_decl SEMI
+   64                     | function_definition
+
+   65 function_definition: function_decl function_body
+
+   66 function_decl: type IDENTIFIER LEFT_PAREN function_args RIGHT_PAREN
+
+   67 function_args: function_arg_list
+   68              | %empty
+
+   69 function_arg_list: function_arg
+   70                  | function_arg COMMA function_arg_list
+
+   71 function_arg: type IDENTIFIER
+
+   72 function_body: LEFT_BRACE function_statements RIGHT_BRACE
+
+   73 function_statements: statements return_statement
+
+   74 return_statement: RETURN expressionv SEMI
+   75                 | %empty
+
+   76 statements: statement statements
+   77           | %empty
+
+   78 statement: var_declaration
+   79          | iterationStatement
+   80          | selectionStatement
+   81          | expressionStatement
+   82          | jumpStatement
+
+   83 expressionStatement: expressionv SEMI
+   84                    | SEMI
+
+   85 iterationStatement: WHILE LEFT_PAREN expressionv RIGHT_PAREN loopBody
+   86                   | DO compoundStatement WHILE LEFT_PAREN expressionv RIGHT_PAREN SEMI
+   87                   | FOR LEFT_PAREN forCondition RIGHT_PAREN loopBody
+
+   88 loopBody: statement
+   89         | compoundStatement
+
+   90 compoundStatement: LEFT_BRACE statements RIGHT_BRACE
+
+   91 forCondition: forInitList SEMI forExpression SEMI incrementExpressionList
+
+   92 forExpression: expressionv
+   93              | %empty
+
+   94 incrementExpressionList: expression_list
+   95                        | %empty
+
+   96 forInitList: %empty
+   97            | forDeclaration
+   98            | expression_list
+
+   99 forDeclaration: type var_declaration_list
+
+  100 jumpStatement: CONTINUE SEMI
+  101              | BREAK SEMI
+
+  102 selectionStatement: ifStatement
+  103                   | switchStatement
+
+  104 ifStatement: IF LEFT_PAREN expressionv RIGHT_PAREN ifBody
+  105            | IF LEFT_PAREN expressionv RIGHT_PAREN ifBody ELSE elseBody
+
+  106 ifBody: compoundStatement
+  107       | statement
+
+  108 elseBody: compoundStatement
+  109         | statement
+
+  110 switchStatement: SWITCH LEFT_PAREN expressionv RIGHT_PAREN LEFT_BRACE labeledStatementList RIGHT_BRACE
+
+  111 labeledStatementList: labeledStatement labeledStatementList
+  112                     | %empty
+
+  113 labeledStatement: CASE constant COLON statements
+  114                 | DEFAULT COLON statements
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT (258) 5
+LONG (259) 9
+FLOAT (260) 7
+SHORT (261) 10
+VOID (262) 8
+DOUBLE (263) 6
+CHAR (264) 11
+UNSIGNED (265)
+CONST (266)
+SIGNED (267)
+STRUCT (268)
+UNION (269)
+ENUM (270)
+VOLATILE (271)
+IF (272) 104 105
+ELSE (273) 105
+SWITCH (274) 110
+GOTO (275)
+CASE (276) 113
+DO (277) 86
+WHILE (278) 85 86
+FOR (279) 87
+CONTINUE (280) 100
+BREAK (281) 101
+RETURN (282) 74
+DEFAULT (283) 114
+TYPEDEF (284)
+AUTO (285)
+REGISTER (286)
+EXTERN (287)
+STATIC (288)
+SIZEOF (289)
+SINGLE_COMMENT (290)
+COMMENTS (291)
+COLON (292) 113 114
+LEFT_PAREN (293) 33 56 66 85 86 87 104 105 110
+RIGHT_PAREN (294) 33 56 66 85 86 87 104 105 110
+LEFT_BRACKET (295) 18 19
+RIGHT_BRACKET (296) 18 19
+LEFT_BRACE (297) 20 21 72 90 110
+RIGHT_BRACE (298) 20 21 72 90 110
+LESS (299) 34
+LESS_EQUAL (300) 35
+GREATER (301) 36
+GREATER_EQUAL (302) 37
+PLUS (303) 28
+PLUS_PLUS (304) 44 45
+MINUS (305) 29 43
+MINUS_MINUS (306) 46 47
+DIV (307) 31
+MOD (308) 32
+MUL (309) 30
+AND_AND (310) 38
+OR_OR (311) 39
+EQUAL (312) 41
+NOT_EQUAL (313) 42
+NOT (314) 40
+COMMA (315) 12 22 24 59 70
+SEMI (316) 4 63 74 83 84 86 91 100 101
+ASSIGN (317) 15 17 26
+IDENTIFIER (318) 14 15 18 19 51 56 66 71
+INTEGER (319) 18 19 53
+DOUBLE_NUMBER (320) 54
+CHARACTER (321) 55
+STRING (322)
+IFX (323)
+NEG (324)
+
+
+Nonterminals, with rules where they appear
+
+$accept (70)
+    on left: 0
+program (71)
+    on left: 1, on right: 0
+declaration_list (72)
+    on left: 2 3, on right: 1 2
+var_declaration (73)
+    on left: 4, on right: 62 78
+type (74)
+    on left: 5 6 7 8 9 10 11, on right: 4 66 71 99
+var_declaration_list (75)
+    on left: 12 13, on right: 4 12 99
+var_decl (76)
+    on left: 14 15 16 17, on right: 12 13
+array_identifier (77)
+    on left: 18, on right: 16 17
+array_access (78)
+    on left: 19, on right: 52
+array_init (79)
+    on left: 20 21, on right: 17 22 23
+array_init_list (80)
+    on left: 22 23, on right: 20 22
+expression_list (81)
+    on left: 24 25, on right: 21 24 94 98
+expressionv (82)
+    on left: 26 27, on right: 15 24 25 26 33 59 60 74 83 85 86 92 104
+    105 110
+expression (83)
+    on left: 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45
+    46 47 48 49 50, on right: 27 28 29 30 31 32 34 35 36 37 38 39 40
+    41 42 43
+var (84)
+    on left: 51 52, on right: 26 44 45 46 47 48
+constant (85)
+    on left: 53 54 55, on right: 50 113
+call (86)
+    on left: 56, on right: 49
+args (87)
+    on left: 57 58, on right: 56
+args_list (88)
+    on left: 59 60, on right: 57 59
+declaration (89)
+    on left: 61 62, on right: 2 3
+function_declaration (90)
+    on left: 63 64, on right: 61
+function_definition (91)
+    on left: 65, on right: 64
+function_decl (92)
+    on left: 66, on right: 63 65
+function_args (93)
+    on left: 67 68, on right: 66
+function_arg_list (94)
+    on left: 69 70, on right: 67 70
+function_arg (95)
+    on left: 71, on right: 69 70
+function_body (96)
+    on left: 72, on right: 65
+function_statements (97)
+    on left: 73, on right: 72
+return_statement (98)
+    on left: 74 75, on right: 73
+statements (99)
+    on left: 76 77, on right: 73 76 90 113 114
+statement (100)
+    on left: 78 79 80 81 82, on right: 76 88 107 109
+expressionStatement (101)
+    on left: 83 84, on right: 81
+iterationStatement (102)
+    on left: 85 86 87, on right: 79
+loopBody (103)
+    on left: 88 89, on right: 85 87
+compoundStatement (104)
+    on left: 90, on right: 86 89 106 108
+forCondition (105)
+    on left: 91, on right: 87
+forExpression (106)
+    on left: 92 93, on right: 91
+incrementExpressionList (107)
+    on left: 94 95, on right: 91
+forInitList (108)
+    on left: 96 97 98, on right: 91
+forDeclaration (109)
+    on left: 99, on right: 97
+jumpStatement (110)
+    on left: 100 101, on right: 82
+selectionStatement (111)
+    on left: 102 103, on right: 80
+ifStatement (112)
+    on left: 104 105, on right: 102
+ifBody (113)
+    on left: 106 107, on right: 104 105
+elseBody (114)
+    on left: 108 109, on right: 105
+switchStatement (115)
+    on left: 110, on right: 103
+labeledStatementList (116)
+    on left: 111 112, on right: 110 111
+labeledStatement (117)
+    on left: 113 114, on right: 111
+
+
+State 0
+
+    0 $accept: . program $end
+
+    INT     shift, and go to state 1
+    LONG    shift, and go to state 2
+    FLOAT   shift, and go to state 3
+    SHORT   shift, and go to state 4
+    VOID    shift, and go to state 5
+    DOUBLE  shift, and go to state 6
+    CHAR    shift, and go to state 7
+
+    program               go to state 8
+    declaration_list      go to state 9
+    var_declaration       go to state 10
+    type                  go to state 11
+    declaration           go to state 12
+    function_declaration  go to state 13
+    function_definition   go to state 14
+    function_decl         go to state 15
+
+
+State 1
+
+    5 type: INT .
+
+    $default  reduce using rule 5 (type)
+
+
+State 2
+
+    9 type: LONG .
+
+    $default  reduce using rule 9 (type)
+
+
+State 3
+
+    7 type: FLOAT .
+
+    $default  reduce using rule 7 (type)
+
+
+State 4
+
+   10 type: SHORT .
+
+    $default  reduce using rule 10 (type)
+
+
+State 5
+
+    8 type: VOID .
+
+    $default  reduce using rule 8 (type)
+
+
+State 6
+
+    6 type: DOUBLE .
+
+    $default  reduce using rule 6 (type)
+
+
+State 7
+
+   11 type: CHAR .
+
+    $default  reduce using rule 11 (type)
+
+
+State 8
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 16
+
+
+State 9
+
+    1 program: declaration_list .
+    2 declaration_list: declaration_list . declaration
+
+    INT     shift, and go to state 1
+    LONG    shift, and go to state 2
+    FLOAT   shift, and go to state 3
+    SHORT   shift, and go to state 4
+    VOID    shift, and go to state 5
+    DOUBLE  shift, and go to state 6
+    CHAR    shift, and go to state 7
+
+    $default  reduce using rule 1 (program)
+
+    var_declaration       go to state 10
+    type                  go to state 11
+    declaration           go to state 17
+    function_declaration  go to state 13
+    function_definition   go to state 14
+    function_decl         go to state 15
+
+
+State 10
+
+   62 declaration: var_declaration .
+
+    $default  reduce using rule 62 (declaration)
+
+
+State 11
+
+    4 var_declaration: type . var_declaration_list SEMI
+   66 function_decl: type . IDENTIFIER LEFT_PAREN function_args RIGHT_PAREN
+
+    IDENTIFIER  shift, and go to state 18
+
+    var_declaration_list  go to state 19
+    var_decl              go to state 20
+    array_identifier      go to state 21
+
+
+State 12
+
+    3 declaration_list: declaration .
+
+    $default  reduce using rule 3 (declaration_list)
+
+
+State 13
+
+   61 declaration: function_declaration .
+
+    $default  reduce using rule 61 (declaration)
+
+
+State 14
+
+   64 function_declaration: function_definition .
+
+    $default  reduce using rule 64 (function_declaration)
+
+
+State 15
+
+   63 function_declaration: function_decl . SEMI
+   65 function_definition: function_decl . function_body
+
+    LEFT_BRACE  shift, and go to state 22
+    SEMI        shift, and go to state 23
+
+    function_body  go to state 24
+
+
+State 16
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 17
+
+    2 declaration_list: declaration_list declaration .
+
+    $default  reduce using rule 2 (declaration_list)
+
+
+State 18
+
+   14 var_decl: IDENTIFIER .
+   15         | IDENTIFIER . ASSIGN expressionv
+   18 array_identifier: IDENTIFIER . LEFT_BRACKET INTEGER RIGHT_BRACKET
+   66 function_decl: type IDENTIFIER . LEFT_PAREN function_args RIGHT_PAREN
+
+    LEFT_PAREN    shift, and go to state 25
+    LEFT_BRACKET  shift, and go to state 26
+    ASSIGN        shift, and go to state 27
+
+    $default  reduce using rule 14 (var_decl)
+
+
+State 19
+
+    4 var_declaration: type var_declaration_list . SEMI
+   12 var_declaration_list: var_declaration_list . COMMA var_decl
+
+    COMMA  shift, and go to state 28
+    SEMI   shift, and go to state 29
+
+
+State 20
+
+   13 var_declaration_list: var_decl .
+
+    $default  reduce using rule 13 (var_declaration_list)
+
+
+State 21
+
+   16 var_decl: array_identifier .
+   17         | array_identifier . ASSIGN array_init
+
+    ASSIGN  shift, and go to state 30
+
+    $default  reduce using rule 16 (var_decl)
+
+
+State 22
+
+   72 function_body: LEFT_BRACE . function_statements RIGHT_BRACE
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 77 (statements)
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    function_statements  go to state 56
+    statements           go to state 57
+    statement            go to state 58
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    switchStatement      go to state 64
+
+
+State 23
+
+   63 function_declaration: function_decl SEMI .
+
+    $default  reduce using rule 63 (function_declaration)
+
+
+State 24
+
+   65 function_definition: function_decl function_body .
+
+    $default  reduce using rule 65 (function_definition)
+
+
+State 25
+
+   66 function_decl: type IDENTIFIER LEFT_PAREN . function_args RIGHT_PAREN
+
+    INT     shift, and go to state 1
+    LONG    shift, and go to state 2
+    FLOAT   shift, and go to state 3
+    SHORT   shift, and go to state 4
+    VOID    shift, and go to state 5
+    DOUBLE  shift, and go to state 6
+    CHAR    shift, and go to state 7
+
+    $default  reduce using rule 68 (function_args)
+
+    type               go to state 65
+    function_args      go to state 66
+    function_arg_list  go to state 67
+    function_arg       go to state 68
+
+
+State 26
+
+   18 array_identifier: IDENTIFIER LEFT_BRACKET . INTEGER RIGHT_BRACKET
+
+    INTEGER  shift, and go to state 69
+
+
+State 27
+
+   15 var_decl: IDENTIFIER ASSIGN . expressionv
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 70
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 28
+
+   12 var_declaration_list: var_declaration_list COMMA . var_decl
+
+    IDENTIFIER  shift, and go to state 71
+
+    var_decl          go to state 72
+    array_identifier  go to state 21
+
+
+State 29
+
+    4 var_declaration: type var_declaration_list SEMI .
+
+    $default  reduce using rule 4 (var_declaration)
+
+
+State 30
+
+   17 var_decl: array_identifier ASSIGN . array_init
+
+    LEFT_BRACE  shift, and go to state 73
+
+    array_init  go to state 74
+
+
+State 31
+
+  104 ifStatement: IF . LEFT_PAREN expressionv RIGHT_PAREN ifBody
+  105            | IF . LEFT_PAREN expressionv RIGHT_PAREN ifBody ELSE elseBody
+
+    LEFT_PAREN  shift, and go to state 75
+
+
+State 32
+
+  110 switchStatement: SWITCH . LEFT_PAREN expressionv RIGHT_PAREN LEFT_BRACE labeledStatementList RIGHT_BRACE
+
+    LEFT_PAREN  shift, and go to state 76
+
+
+State 33
+
+   86 iterationStatement: DO . compoundStatement WHILE LEFT_PAREN expressionv RIGHT_PAREN SEMI
+
+    LEFT_BRACE  shift, and go to state 77
+
+    compoundStatement  go to state 78
+
+
+State 34
+
+   85 iterationStatement: WHILE . LEFT_PAREN expressionv RIGHT_PAREN loopBody
+
+    LEFT_PAREN  shift, and go to state 79
+
+
+State 35
+
+   87 iterationStatement: FOR . LEFT_PAREN forCondition RIGHT_PAREN loopBody
+
+    LEFT_PAREN  shift, and go to state 80
+
+
+State 36
+
+  100 jumpStatement: CONTINUE . SEMI
+
+    SEMI  shift, and go to state 81
+
+
+State 37
+
+  101 jumpStatement: BREAK . SEMI
+
+    SEMI  shift, and go to state 82
+
+
+State 38
+
+   33 expression: LEFT_PAREN . expressionv RIGHT_PAREN
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 83
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 39
+
+   44 expression: PLUS_PLUS . var
+
+    IDENTIFIER  shift, and go to state 84
+
+    array_access  go to state 50
+    var           go to state 85
+
+
+State 40
+
+   43 expression: MINUS . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 86
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 41
+
+   46 expression: MINUS_MINUS . var
+
+    IDENTIFIER  shift, and go to state 84
+
+    array_access  go to state 50
+    var           go to state 88
+
+
+State 42
+
+   40 expression: NOT . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 89
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 43
+
+   84 expressionStatement: SEMI .
+
+    $default  reduce using rule 84 (expressionStatement)
+
+
+State 44
+
+   19 array_access: IDENTIFIER . LEFT_BRACKET INTEGER RIGHT_BRACKET
+   51 var: IDENTIFIER .
+   56 call: IDENTIFIER . LEFT_PAREN args RIGHT_PAREN
+
+    LEFT_PAREN    shift, and go to state 90
+    LEFT_BRACKET  shift, and go to state 91
+
+    $default  reduce using rule 51 (var)
+
+
+State 45
+
+   53 constant: INTEGER .
+
+    $default  reduce using rule 53 (constant)
+
+
+State 46
+
+   54 constant: DOUBLE_NUMBER .
+
+    $default  reduce using rule 54 (constant)
+
+
+State 47
+
+   55 constant: CHARACTER .
+
+    $default  reduce using rule 55 (constant)
+
+
+State 48
+
+   78 statement: var_declaration .
+
+    $default  reduce using rule 78 (statement)
+
+
+State 49
+
+    4 var_declaration: type . var_declaration_list SEMI
+
+    IDENTIFIER  shift, and go to state 71
+
+    var_declaration_list  go to state 19
+    var_decl              go to state 20
+    array_identifier      go to state 21
+
+
+State 50
+
+   52 var: array_access .
+
+    $default  reduce using rule 52 (var)
+
+
+State 51
+
+   83 expressionStatement: expressionv . SEMI
+
+    SEMI  shift, and go to state 92
+
+
+State 52
+
+   27 expressionv: expression .
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    LESS           shift, and go to state 93
+    LESS_EQUAL     shift, and go to state 94
+    GREATER        shift, and go to state 95
+    GREATER_EQUAL  shift, and go to state 96
+    PLUS           shift, and go to state 97
+    MINUS          shift, and go to state 98
+    DIV            shift, and go to state 99
+    MOD            shift, and go to state 100
+    MUL            shift, and go to state 101
+    AND_AND        shift, and go to state 102
+    OR_OR          shift, and go to state 103
+    EQUAL          shift, and go to state 104
+    NOT_EQUAL      shift, and go to state 105
+
+    $default  reduce using rule 27 (expressionv)
+
+
+State 53
+
+   26 expressionv: var . ASSIGN expressionv
+   45 expression: var . PLUS_PLUS
+   47           | var . MINUS_MINUS
+   48           | var .
+
+    PLUS_PLUS    shift, and go to state 106
+    MINUS_MINUS  shift, and go to state 107
+    ASSIGN       shift, and go to state 108
+
+    $default  reduce using rule 48 (expression)
+
+
+State 54
+
+   50 expression: constant .
+
+    $default  reduce using rule 50 (expression)
+
+
+State 55
+
+   49 expression: call .
+
+    $default  reduce using rule 49 (expression)
+
+
+State 56
+
+   72 function_body: LEFT_BRACE function_statements . RIGHT_BRACE
+
+    RIGHT_BRACE  shift, and go to state 109
+
+
+State 57
+
+   73 function_statements: statements . return_statement
+
+    RETURN  shift, and go to state 110
+
+    $default  reduce using rule 75 (return_statement)
+
+    return_statement  go to state 111
+
+
+State 58
+
+   76 statements: statement . statements
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 77 (statements)
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    statements           go to state 112
+    statement            go to state 58
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    switchStatement      go to state 64
+
+
+State 59
+
+   81 statement: expressionStatement .
+
+    $default  reduce using rule 81 (statement)
+
+
+State 60
+
+   79 statement: iterationStatement .
+
+    $default  reduce using rule 79 (statement)
+
+
+State 61
+
+   82 statement: jumpStatement .
+
+    $default  reduce using rule 82 (statement)
+
+
+State 62
+
+   80 statement: selectionStatement .
+
+    $default  reduce using rule 80 (statement)
+
+
+State 63
+
+  102 selectionStatement: ifStatement .
+
+    $default  reduce using rule 102 (selectionStatement)
+
+
+State 64
+
+  103 selectionStatement: switchStatement .
+
+    $default  reduce using rule 103 (selectionStatement)
+
+
+State 65
+
+   71 function_arg: type . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 113
+
+
+State 66
+
+   66 function_decl: type IDENTIFIER LEFT_PAREN function_args . RIGHT_PAREN
+
+    RIGHT_PAREN  shift, and go to state 114
+
+
+State 67
+
+   67 function_args: function_arg_list .
+
+    $default  reduce using rule 67 (function_args)
+
+
+State 68
+
+   69 function_arg_list: function_arg .
+   70                  | function_arg . COMMA function_arg_list
+
+    COMMA  shift, and go to state 115
+
+    $default  reduce using rule 69 (function_arg_list)
+
+
+State 69
+
+   18 array_identifier: IDENTIFIER LEFT_BRACKET INTEGER . RIGHT_BRACKET
+
+    RIGHT_BRACKET  shift, and go to state 116
+
+
+State 70
+
+   15 var_decl: IDENTIFIER ASSIGN expressionv .
+
+    $default  reduce using rule 15 (var_decl)
+
+
+State 71
+
+   14 var_decl: IDENTIFIER .
+   15         | IDENTIFIER . ASSIGN expressionv
+   18 array_identifier: IDENTIFIER . LEFT_BRACKET INTEGER RIGHT_BRACKET
+
+    LEFT_BRACKET  shift, and go to state 26
+    ASSIGN        shift, and go to state 27
+
+    $default  reduce using rule 14 (var_decl)
+
+
+State 72
+
+   12 var_declaration_list: var_declaration_list COMMA var_decl .
+
+    $default  reduce using rule 12 (var_declaration_list)
+
+
+State 73
+
+   20 array_init: LEFT_BRACE . array_init_list RIGHT_BRACE
+   21           | LEFT_BRACE . expression_list RIGHT_BRACE
+
+    LEFT_PAREN     shift, and go to state 38
+    LEFT_BRACE     shift, and go to state 73
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access     go to state 50
+    array_init       go to state 117
+    array_init_list  go to state 118
+    expression_list  go to state 119
+    expressionv      go to state 120
+    expression       go to state 52
+    var              go to state 53
+    constant         go to state 54
+    call             go to state 55
+
+
+State 74
+
+   17 var_decl: array_identifier ASSIGN array_init .
+
+    $default  reduce using rule 17 (var_decl)
+
+
+State 75
+
+  104 ifStatement: IF LEFT_PAREN . expressionv RIGHT_PAREN ifBody
+  105            | IF LEFT_PAREN . expressionv RIGHT_PAREN ifBody ELSE elseBody
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 121
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 76
+
+  110 switchStatement: SWITCH LEFT_PAREN . expressionv RIGHT_PAREN LEFT_BRACE labeledStatementList RIGHT_BRACE
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 122
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 77
+
+   90 compoundStatement: LEFT_BRACE . statements RIGHT_BRACE
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 77 (statements)
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    statements           go to state 123
+    statement            go to state 58
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    switchStatement      go to state 64
+
+
+State 78
+
+   86 iterationStatement: DO compoundStatement . WHILE LEFT_PAREN expressionv RIGHT_PAREN SEMI
+
+    WHILE  shift, and go to state 124
+
+
+State 79
+
+   85 iterationStatement: WHILE LEFT_PAREN . expressionv RIGHT_PAREN loopBody
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 125
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 80
+
+   87 iterationStatement: FOR LEFT_PAREN . forCondition RIGHT_PAREN loopBody
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 96 (forInitList)
+
+    type             go to state 126
+    array_access     go to state 50
+    expression_list  go to state 127
+    expressionv      go to state 120
+    expression       go to state 52
+    var              go to state 53
+    constant         go to state 54
+    call             go to state 55
+    forCondition     go to state 128
+    forInitList      go to state 129
+    forDeclaration   go to state 130
+
+
+State 81
+
+  100 jumpStatement: CONTINUE SEMI .
+
+    $default  reduce using rule 100 (jumpStatement)
+
+
+State 82
+
+  101 jumpStatement: BREAK SEMI .
+
+    $default  reduce using rule 101 (jumpStatement)
+
+
+State 83
+
+   33 expression: LEFT_PAREN expressionv . RIGHT_PAREN
+
+    RIGHT_PAREN  shift, and go to state 131
+
+
+State 84
+
+   19 array_access: IDENTIFIER . LEFT_BRACKET INTEGER RIGHT_BRACKET
+   51 var: IDENTIFIER .
+
+    LEFT_BRACKET  shift, and go to state 91
+
+    $default  reduce using rule 51 (var)
+
+
+State 85
+
+   44 expression: PLUS_PLUS var .
+
+    $default  reduce using rule 44 (expression)
+
+
+State 86
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+   43           | MINUS expression .
+
+    $default  reduce using rule 43 (expression)
+
+
+State 87
+
+   45 expression: var . PLUS_PLUS
+   47           | var . MINUS_MINUS
+   48           | var .
+
+    PLUS_PLUS    shift, and go to state 106
+    MINUS_MINUS  shift, and go to state 107
+
+    $default  reduce using rule 48 (expression)
+
+
+State 88
+
+   46 expression: MINUS_MINUS var .
+
+    $default  reduce using rule 46 (expression)
+
+
+State 89
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   40           | NOT expression .
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    $default  reduce using rule 40 (expression)
+
+
+State 90
+
+   56 call: IDENTIFIER LEFT_PAREN . args RIGHT_PAREN
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 58 (args)
+
+    array_access  go to state 50
+    expressionv   go to state 132
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+    args          go to state 133
+    args_list     go to state 134
+
+
+State 91
+
+   19 array_access: IDENTIFIER LEFT_BRACKET . INTEGER RIGHT_BRACKET
+
+    INTEGER  shift, and go to state 135
+
+
+State 92
+
+   83 expressionStatement: expressionv SEMI .
+
+    $default  reduce using rule 83 (expressionStatement)
+
+
+State 93
+
+   34 expression: expression LESS . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 136
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 94
+
+   35 expression: expression LESS_EQUAL . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 137
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 95
+
+   36 expression: expression GREATER . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 138
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 96
+
+   37 expression: expression GREATER_EQUAL . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 139
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 97
+
+   28 expression: expression PLUS . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 140
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 98
+
+   29 expression: expression MINUS . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 141
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 99
+
+   31 expression: expression DIV . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 142
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 100
+
+   32 expression: expression MOD . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 143
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 101
+
+   30 expression: expression MUL . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 144
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 102
+
+   38 expression: expression AND_AND . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 145
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 103
+
+   39 expression: expression OR_OR . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 146
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 104
+
+   41 expression: expression EQUAL . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 147
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 105
+
+   42 expression: expression NOT_EQUAL . expression
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expression    go to state 148
+    var           go to state 87
+    constant      go to state 54
+    call          go to state 55
+
+
+State 106
+
+   45 expression: var PLUS_PLUS .
+
+    $default  reduce using rule 45 (expression)
+
+
+State 107
+
+   47 expression: var MINUS_MINUS .
+
+    $default  reduce using rule 47 (expression)
+
+
+State 108
+
+   26 expressionv: var ASSIGN . expressionv
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 149
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 109
+
+   72 function_body: LEFT_BRACE function_statements RIGHT_BRACE .
+
+    $default  reduce using rule 72 (function_body)
+
+
+State 110
+
+   74 return_statement: RETURN . expressionv SEMI
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 150
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 111
+
+   73 function_statements: statements return_statement .
+
+    $default  reduce using rule 73 (function_statements)
+
+
+State 112
+
+   76 statements: statement statements .
+
+    $default  reduce using rule 76 (statements)
+
+
+State 113
+
+   71 function_arg: type IDENTIFIER .
+
+    $default  reduce using rule 71 (function_arg)
+
+
+State 114
+
+   66 function_decl: type IDENTIFIER LEFT_PAREN function_args RIGHT_PAREN .
+
+    $default  reduce using rule 66 (function_decl)
+
+
+State 115
+
+   70 function_arg_list: function_arg COMMA . function_arg_list
+
+    INT     shift, and go to state 1
+    LONG    shift, and go to state 2
+    FLOAT   shift, and go to state 3
+    SHORT   shift, and go to state 4
+    VOID    shift, and go to state 5
+    DOUBLE  shift, and go to state 6
+    CHAR    shift, and go to state 7
+
+    type               go to state 65
+    function_arg_list  go to state 151
+    function_arg       go to state 68
+
+
+State 116
+
+   18 array_identifier: IDENTIFIER LEFT_BRACKET INTEGER RIGHT_BRACKET .
+
+    $default  reduce using rule 18 (array_identifier)
+
+
+State 117
+
+   23 array_init_list: array_init .
+
+    $default  reduce using rule 23 (array_init_list)
+
+
+State 118
+
+   20 array_init: LEFT_BRACE array_init_list . RIGHT_BRACE
+   22 array_init_list: array_init_list . COMMA array_init
+
+    RIGHT_BRACE  shift, and go to state 152
+    COMMA        shift, and go to state 153
+
+
+State 119
+
+   21 array_init: LEFT_BRACE expression_list . RIGHT_BRACE
+   24 expression_list: expression_list . COMMA expressionv
+
+    RIGHT_BRACE  shift, and go to state 154
+    COMMA        shift, and go to state 155
+
+
+State 120
+
+   25 expression_list: expressionv .
+
+    $default  reduce using rule 25 (expression_list)
+
+
+State 121
+
+  104 ifStatement: IF LEFT_PAREN expressionv . RIGHT_PAREN ifBody
+  105            | IF LEFT_PAREN expressionv . RIGHT_PAREN ifBody ELSE elseBody
+
+    RIGHT_PAREN  shift, and go to state 156
+
+
+State 122
+
+  110 switchStatement: SWITCH LEFT_PAREN expressionv . RIGHT_PAREN LEFT_BRACE labeledStatementList RIGHT_BRACE
+
+    RIGHT_PAREN  shift, and go to state 157
+
+
+State 123
+
+   90 compoundStatement: LEFT_BRACE statements . RIGHT_BRACE
+
+    RIGHT_BRACE  shift, and go to state 158
+
+
+State 124
+
+   86 iterationStatement: DO compoundStatement WHILE . LEFT_PAREN expressionv RIGHT_PAREN SEMI
+
+    LEFT_PAREN  shift, and go to state 159
+
+
+State 125
+
+   85 iterationStatement: WHILE LEFT_PAREN expressionv . RIGHT_PAREN loopBody
+
+    RIGHT_PAREN  shift, and go to state 160
+
+
+State 126
+
+   99 forDeclaration: type . var_declaration_list
+
+    IDENTIFIER  shift, and go to state 71
+
+    var_declaration_list  go to state 161
+    var_decl              go to state 20
+    array_identifier      go to state 21
+
+
+State 127
+
+   24 expression_list: expression_list . COMMA expressionv
+   98 forInitList: expression_list .
+
+    COMMA  shift, and go to state 155
+
+    $default  reduce using rule 98 (forInitList)
+
+
+State 128
+
+   87 iterationStatement: FOR LEFT_PAREN forCondition . RIGHT_PAREN loopBody
+
+    RIGHT_PAREN  shift, and go to state 162
+
+
+State 129
+
+   91 forCondition: forInitList . SEMI forExpression SEMI incrementExpressionList
+
+    SEMI  shift, and go to state 163
+
+
+State 130
+
+   97 forInitList: forDeclaration .
+
+    $default  reduce using rule 97 (forInitList)
+
+
+State 131
+
+   33 expression: LEFT_PAREN expressionv RIGHT_PAREN .
+
+    $default  reduce using rule 33 (expression)
+
+
+State 132
+
+   60 args_list: expressionv .
+
+    $default  reduce using rule 60 (args_list)
+
+
+State 133
+
+   56 call: IDENTIFIER LEFT_PAREN args . RIGHT_PAREN
+
+    RIGHT_PAREN  shift, and go to state 164
+
+
+State 134
+
+   57 args: args_list .
+   59 args_list: args_list . COMMA expressionv
+
+    COMMA  shift, and go to state 165
+
+    $default  reduce using rule 57 (args)
+
+
+State 135
+
+   19 array_access: IDENTIFIER LEFT_BRACKET INTEGER . RIGHT_BRACKET
+
+    RIGHT_BRACKET  shift, and go to state 166
+
+
+State 136
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   34           | expression LESS expression .
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    PLUS   shift, and go to state 97
+    MINUS  shift, and go to state 98
+    DIV    shift, and go to state 99
+    MOD    shift, and go to state 100
+    MUL    shift, and go to state 101
+
+    $default  reduce using rule 34 (expression)
+
+
+State 137
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   35           | expression LESS_EQUAL expression .
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    PLUS   shift, and go to state 97
+    MINUS  shift, and go to state 98
+    DIV    shift, and go to state 99
+    MOD    shift, and go to state 100
+    MUL    shift, and go to state 101
+
+    $default  reduce using rule 35 (expression)
+
+
+State 138
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   36           | expression GREATER expression .
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    PLUS   shift, and go to state 97
+    MINUS  shift, and go to state 98
+    DIV    shift, and go to state 99
+    MOD    shift, and go to state 100
+    MUL    shift, and go to state 101
+
+    $default  reduce using rule 36 (expression)
+
+
+State 139
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   37           | expression GREATER_EQUAL expression .
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    PLUS   shift, and go to state 97
+    MINUS  shift, and go to state 98
+    DIV    shift, and go to state 99
+    MOD    shift, and go to state 100
+    MUL    shift, and go to state 101
+
+    $default  reduce using rule 37 (expression)
+
+
+State 140
+
+   28 expression: expression . PLUS expression
+   28           | expression PLUS expression .
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    DIV  shift, and go to state 99
+    MOD  shift, and go to state 100
+    MUL  shift, and go to state 101
+
+    $default  reduce using rule 28 (expression)
+
+
+State 141
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   29           | expression MINUS expression .
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    DIV  shift, and go to state 99
+    MOD  shift, and go to state 100
+    MUL  shift, and go to state 101
+
+    $default  reduce using rule 29 (expression)
+
+
+State 142
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   31           | expression DIV expression .
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    $default  reduce using rule 31 (expression)
+
+
+State 143
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   32           | expression MOD expression .
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    $default  reduce using rule 32 (expression)
+
+
+State 144
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   30           | expression MUL expression .
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    $default  reduce using rule 30 (expression)
+
+
+State 145
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   38           | expression AND_AND expression .
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    LESS           shift, and go to state 93
+    LESS_EQUAL     shift, and go to state 94
+    GREATER        shift, and go to state 95
+    GREATER_EQUAL  shift, and go to state 96
+    PLUS           shift, and go to state 97
+    MINUS          shift, and go to state 98
+    DIV            shift, and go to state 99
+    MOD            shift, and go to state 100
+    MUL            shift, and go to state 101
+    EQUAL          shift, and go to state 104
+    NOT_EQUAL      shift, and go to state 105
+
+    $default  reduce using rule 38 (expression)
+
+
+State 146
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   39           | expression OR_OR expression .
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+
+    LESS           shift, and go to state 93
+    LESS_EQUAL     shift, and go to state 94
+    GREATER        shift, and go to state 95
+    GREATER_EQUAL  shift, and go to state 96
+    PLUS           shift, and go to state 97
+    MINUS          shift, and go to state 98
+    DIV            shift, and go to state 99
+    MOD            shift, and go to state 100
+    MUL            shift, and go to state 101
+    AND_AND        shift, and go to state 102
+    EQUAL          shift, and go to state 104
+    NOT_EQUAL      shift, and go to state 105
+
+    $default  reduce using rule 39 (expression)
+
+
+State 147
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   41           | expression EQUAL expression .
+   42           | expression . NOT_EQUAL expression
+
+    LESS           shift, and go to state 93
+    LESS_EQUAL     shift, and go to state 94
+    GREATER        shift, and go to state 95
+    GREATER_EQUAL  shift, and go to state 96
+    PLUS           shift, and go to state 97
+    MINUS          shift, and go to state 98
+    DIV            shift, and go to state 99
+    MOD            shift, and go to state 100
+    MUL            shift, and go to state 101
+
+    $default  reduce using rule 41 (expression)
+
+
+State 148
+
+   28 expression: expression . PLUS expression
+   29           | expression . MINUS expression
+   30           | expression . MUL expression
+   31           | expression . DIV expression
+   32           | expression . MOD expression
+   34           | expression . LESS expression
+   35           | expression . LESS_EQUAL expression
+   36           | expression . GREATER expression
+   37           | expression . GREATER_EQUAL expression
+   38           | expression . AND_AND expression
+   39           | expression . OR_OR expression
+   41           | expression . EQUAL expression
+   42           | expression . NOT_EQUAL expression
+   42           | expression NOT_EQUAL expression .
+
+    LESS           shift, and go to state 93
+    LESS_EQUAL     shift, and go to state 94
+    GREATER        shift, and go to state 95
+    GREATER_EQUAL  shift, and go to state 96
+    PLUS           shift, and go to state 97
+    MINUS          shift, and go to state 98
+    DIV            shift, and go to state 99
+    MOD            shift, and go to state 100
+    MUL            shift, and go to state 101
+
+    $default  reduce using rule 42 (expression)
+
+
+State 149
+
+   26 expressionv: var ASSIGN expressionv .
+
+    $default  reduce using rule 26 (expressionv)
+
+
+State 150
+
+   74 return_statement: RETURN expressionv . SEMI
+
+    SEMI  shift, and go to state 167
+
+
+State 151
+
+   70 function_arg_list: function_arg COMMA function_arg_list .
+
+    $default  reduce using rule 70 (function_arg_list)
+
+
+State 152
+
+   20 array_init: LEFT_BRACE array_init_list RIGHT_BRACE .
+
+    $default  reduce using rule 20 (array_init)
+
+
+State 153
+
+   22 array_init_list: array_init_list COMMA . array_init
+
+    LEFT_BRACE  shift, and go to state 73
+
+    array_init  go to state 168
+
+
+State 154
+
+   21 array_init: LEFT_BRACE expression_list RIGHT_BRACE .
+
+    $default  reduce using rule 21 (array_init)
+
+
+State 155
+
+   24 expression_list: expression_list COMMA . expressionv
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 169
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 156
+
+  104 ifStatement: IF LEFT_PAREN expressionv RIGHT_PAREN . ifBody
+  105            | IF LEFT_PAREN expressionv RIGHT_PAREN . ifBody ELSE elseBody
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    LEFT_BRACE     shift, and go to state 77
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    statement            go to state 170
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    compoundStatement    go to state 171
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    ifBody               go to state 172
+    switchStatement      go to state 64
+
+
+State 157
+
+  110 switchStatement: SWITCH LEFT_PAREN expressionv RIGHT_PAREN . LEFT_BRACE labeledStatementList RIGHT_BRACE
+
+    LEFT_BRACE  shift, and go to state 173
+
+
+State 158
+
+   90 compoundStatement: LEFT_BRACE statements RIGHT_BRACE .
+
+    $default  reduce using rule 90 (compoundStatement)
+
+
+State 159
+
+   86 iterationStatement: DO compoundStatement WHILE LEFT_PAREN . expressionv RIGHT_PAREN SEMI
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 174
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 160
+
+   85 iterationStatement: WHILE LEFT_PAREN expressionv RIGHT_PAREN . loopBody
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    LEFT_BRACE     shift, and go to state 77
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    statement            go to state 175
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    loopBody             go to state 176
+    compoundStatement    go to state 177
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    switchStatement      go to state 64
+
+
+State 161
+
+   12 var_declaration_list: var_declaration_list . COMMA var_decl
+   99 forDeclaration: type var_declaration_list .
+
+    COMMA  shift, and go to state 28
+
+    $default  reduce using rule 99 (forDeclaration)
+
+
+State 162
+
+   87 iterationStatement: FOR LEFT_PAREN forCondition RIGHT_PAREN . loopBody
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    LEFT_BRACE     shift, and go to state 77
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    statement            go to state 175
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    loopBody             go to state 178
+    compoundStatement    go to state 177
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    switchStatement      go to state 64
+
+
+State 163
+
+   91 forCondition: forInitList SEMI . forExpression SEMI incrementExpressionList
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 93 (forExpression)
+
+    array_access   go to state 50
+    expressionv    go to state 179
+    expression     go to state 52
+    var            go to state 53
+    constant       go to state 54
+    call           go to state 55
+    forExpression  go to state 180
+
+
+State 164
+
+   56 call: IDENTIFIER LEFT_PAREN args RIGHT_PAREN .
+
+    $default  reduce using rule 56 (call)
+
+
+State 165
+
+   59 args_list: args_list COMMA . expressionv
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    array_access  go to state 50
+    expressionv   go to state 181
+    expression    go to state 52
+    var           go to state 53
+    constant      go to state 54
+    call          go to state 55
+
+
+State 166
+
+   19 array_access: IDENTIFIER LEFT_BRACKET INTEGER RIGHT_BRACKET .
+
+    $default  reduce using rule 19 (array_access)
+
+
+State 167
+
+   74 return_statement: RETURN expressionv SEMI .
+
+    $default  reduce using rule 74 (return_statement)
+
+
+State 168
+
+   22 array_init_list: array_init_list COMMA array_init .
+
+    $default  reduce using rule 22 (array_init_list)
+
+
+State 169
+
+   24 expression_list: expression_list COMMA expressionv .
+
+    $default  reduce using rule 24 (expression_list)
+
+
+State 170
+
+  107 ifBody: statement .
+
+    $default  reduce using rule 107 (ifBody)
+
+
+State 171
+
+  106 ifBody: compoundStatement .
+
+    $default  reduce using rule 106 (ifBody)
+
+
+State 172
+
+  104 ifStatement: IF LEFT_PAREN expressionv RIGHT_PAREN ifBody .
+  105            | IF LEFT_PAREN expressionv RIGHT_PAREN ifBody . ELSE elseBody
+
+    ELSE  shift, and go to state 182
+
+    $default  reduce using rule 104 (ifStatement)
+
+
+State 173
+
+  110 switchStatement: SWITCH LEFT_PAREN expressionv RIGHT_PAREN LEFT_BRACE . labeledStatementList RIGHT_BRACE
+
+    CASE     shift, and go to state 183
+    DEFAULT  shift, and go to state 184
+
+    $default  reduce using rule 112 (labeledStatementList)
+
+    labeledStatementList  go to state 185
+    labeledStatement      go to state 186
+
+
+State 174
+
+   86 iterationStatement: DO compoundStatement WHILE LEFT_PAREN expressionv . RIGHT_PAREN SEMI
+
+    RIGHT_PAREN  shift, and go to state 187
+
+
+State 175
+
+   88 loopBody: statement .
+
+    $default  reduce using rule 88 (loopBody)
+
+
+State 176
+
+   85 iterationStatement: WHILE LEFT_PAREN expressionv RIGHT_PAREN loopBody .
+
+    $default  reduce using rule 85 (iterationStatement)
+
+
+State 177
+
+   89 loopBody: compoundStatement .
+
+    $default  reduce using rule 89 (loopBody)
+
+
+State 178
+
+   87 iterationStatement: FOR LEFT_PAREN forCondition RIGHT_PAREN loopBody .
+
+    $default  reduce using rule 87 (iterationStatement)
+
+
+State 179
+
+   92 forExpression: expressionv .
+
+    $default  reduce using rule 92 (forExpression)
+
+
+State 180
+
+   91 forCondition: forInitList SEMI forExpression . SEMI incrementExpressionList
+
+    SEMI  shift, and go to state 188
+
+
+State 181
+
+   59 args_list: args_list COMMA expressionv .
+
+    $default  reduce using rule 59 (args_list)
+
+
+State 182
+
+  105 ifStatement: IF LEFT_PAREN expressionv RIGHT_PAREN ifBody ELSE . elseBody
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    LEFT_BRACE     shift, and go to state 77
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    statement            go to state 189
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    compoundStatement    go to state 190
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    elseBody             go to state 191
+    switchStatement      go to state 64
+
+
+State 183
+
+  113 labeledStatement: CASE . constant COLON statements
+
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    constant  go to state 192
+
+
+State 184
+
+  114 labeledStatement: DEFAULT . COLON statements
+
+    COLON  shift, and go to state 193
+
+
+State 185
+
+  110 switchStatement: SWITCH LEFT_PAREN expressionv RIGHT_PAREN LEFT_BRACE labeledStatementList . RIGHT_BRACE
+
+    RIGHT_BRACE  shift, and go to state 194
+
+
+State 186
+
+  111 labeledStatementList: labeledStatement . labeledStatementList
+
+    CASE     shift, and go to state 183
+    DEFAULT  shift, and go to state 184
+
+    $default  reduce using rule 112 (labeledStatementList)
+
+    labeledStatementList  go to state 195
+    labeledStatement      go to state 186
+
+
+State 187
+
+   86 iterationStatement: DO compoundStatement WHILE LEFT_PAREN expressionv RIGHT_PAREN . SEMI
+
+    SEMI  shift, and go to state 196
+
+
+State 188
+
+   91 forCondition: forInitList SEMI forExpression SEMI . incrementExpressionList
+
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 95 (incrementExpressionList)
+
+    array_access             go to state 50
+    expression_list          go to state 197
+    expressionv              go to state 120
+    expression               go to state 52
+    var                      go to state 53
+    constant                 go to state 54
+    call                     go to state 55
+    incrementExpressionList  go to state 198
+
+
+State 189
+
+  109 elseBody: statement .
+
+    $default  reduce using rule 109 (elseBody)
+
+
+State 190
+
+  108 elseBody: compoundStatement .
+
+    $default  reduce using rule 108 (elseBody)
+
+
+State 191
+
+  105 ifStatement: IF LEFT_PAREN expressionv RIGHT_PAREN ifBody ELSE elseBody .
+
+    $default  reduce using rule 105 (ifStatement)
+
+
+State 192
+
+  113 labeledStatement: CASE constant . COLON statements
+
+    COLON  shift, and go to state 199
+
+
+State 193
+
+  114 labeledStatement: DEFAULT COLON . statements
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 77 (statements)
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    statements           go to state 200
+    statement            go to state 58
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    switchStatement      go to state 64
+
+
+State 194
+
+  110 switchStatement: SWITCH LEFT_PAREN expressionv RIGHT_PAREN LEFT_BRACE labeledStatementList RIGHT_BRACE .
+
+    $default  reduce using rule 110 (switchStatement)
+
+
+State 195
+
+  111 labeledStatementList: labeledStatement labeledStatementList .
+
+    $default  reduce using rule 111 (labeledStatementList)
+
+
+State 196
+
+   86 iterationStatement: DO compoundStatement WHILE LEFT_PAREN expressionv RIGHT_PAREN SEMI .
+
+    $default  reduce using rule 86 (iterationStatement)
+
+
+State 197
+
+   24 expression_list: expression_list . COMMA expressionv
+   94 incrementExpressionList: expression_list .
+
+    COMMA  shift, and go to state 155
+
+    $default  reduce using rule 94 (incrementExpressionList)
+
+
+State 198
+
+   91 forCondition: forInitList SEMI forExpression SEMI incrementExpressionList .
+
+    $default  reduce using rule 91 (forCondition)
+
+
+State 199
+
+  113 labeledStatement: CASE constant COLON . statements
+
+    INT            shift, and go to state 1
+    LONG           shift, and go to state 2
+    FLOAT          shift, and go to state 3
+    SHORT          shift, and go to state 4
+    VOID           shift, and go to state 5
+    DOUBLE         shift, and go to state 6
+    CHAR           shift, and go to state 7
+    IF             shift, and go to state 31
+    SWITCH         shift, and go to state 32
+    DO             shift, and go to state 33
+    WHILE          shift, and go to state 34
+    FOR            shift, and go to state 35
+    CONTINUE       shift, and go to state 36
+    BREAK          shift, and go to state 37
+    LEFT_PAREN     shift, and go to state 38
+    PLUS_PLUS      shift, and go to state 39
+    MINUS          shift, and go to state 40
+    MINUS_MINUS    shift, and go to state 41
+    NOT            shift, and go to state 42
+    SEMI           shift, and go to state 43
+    IDENTIFIER     shift, and go to state 44
+    INTEGER        shift, and go to state 45
+    DOUBLE_NUMBER  shift, and go to state 46
+    CHARACTER      shift, and go to state 47
+
+    $default  reduce using rule 77 (statements)
+
+    var_declaration      go to state 48
+    type                 go to state 49
+    array_access         go to state 50
+    expressionv          go to state 51
+    expression           go to state 52
+    var                  go to state 53
+    constant             go to state 54
+    call                 go to state 55
+    statements           go to state 201
+    statement            go to state 58
+    expressionStatement  go to state 59
+    iterationStatement   go to state 60
+    jumpStatement        go to state 61
+    selectionStatement   go to state 62
+    ifStatement          go to state 63
+    switchStatement      go to state 64
+
+
+State 200
+
+  114 labeledStatement: DEFAULT COLON statements .
+
+    $default  reduce using rule 114 (labeledStatement)
+
+
+State 201
+
+  113 labeledStatement: CASE constant COLON statements .
+
+    $default  reduce using rule 113 (labeledStatement)

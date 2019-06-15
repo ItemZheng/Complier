@@ -357,7 +357,7 @@ public:
     type_var type;
     vector<VarDeclNode *> *var_declaration_list;
 public:
-    VarDeclarationNode(type_var type, vector<VarDeclNode *> *vdl);
+    VarDeclarationNode(type_var type, vector<VarDeclNode *> * vdl);
 
     ~VarDeclarationNode();
 
@@ -390,11 +390,24 @@ class ArrayIdentifierNode : public Node {
 public:
     std::string *identifier;
     int size;
-    int index;
 public:
-    ArrayIdentifierNode(string *identifier, int size, int index);
+    ArrayIdentifierNode(string *identifier, int size);
 
     ~ArrayIdentifierNode();
+
+    void visit(){}
+
+    void codeGen(){}
+};
+
+class ArrayAccessNode : public Node{
+public:
+    std::string *identifier;
+    int index;
+public:
+    ArrayAccessNode(string *identifier, int index);
+
+    ~ArrayAccessNode();
 
     void visit(){}
 
@@ -437,9 +450,9 @@ class VarNode : public Node {
 public:
     type_identifier type;
     std::string *identifier;
-    ArrayIdentifierNode *array_identifier;
+    ArrayAccessNode *array_access;
 public:
-    VarNode(type_identifier type, string *identifier, ArrayIdentifierNode *array_identifier);
+    VarNode(type_identifier type, string *identifier, ArrayAccessNode *array_access);
 
     ~VarNode();
 
