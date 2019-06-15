@@ -20,7 +20,7 @@ typedef enum{
 typedef enum{
     SINGLE,
     ARRAY
-} tpye_identifier;
+} type_identifier;
 
 typedef enum{
     PLUS,

@@ -10,7 +10,7 @@ VarDeclarationNode::VarDeclarationNode(type_var type, vector<VarDeclNode *> * vd
 VarDeclNode::VarDeclNode(type_identifier type, string * identifier,
 ArrayIdentifierNode * array_identifier, int assign, ExpressionVNode * expressionv,
 ArrayInitNode * array_init){
-    this->tpye = type;
+    this->type = type;
     this->identifier = identifier;
     this->array_identifier = array_identifier;
     this->assign = assign;
@@ -110,31 +110,31 @@ StatementNode::StatementNode() {
 }
 
 StatementNode::StatementNode(VarDeclarationNode *varDeclarationNode) {
-    this();
+    StatementNode();
     this->varDeclarationNode = varDeclarationNode;
     this->type = TYPE_VAR_DECLARATION;
 }
 
 StatementNode::StatementNode(IterationStatementNode *iterationStatementNode) {
-    this();
+    StatementNode();
     this->iterationStatementNode = iterationStatementNode;
     this->type = TYPE_ITERATION;
 }
 
 StatementNode::StatementNode(SelectionStatementNode *selectionStatementNode) {
-    this();
+    StatementNode();
     this->selectionStatementNode = selectionStatementNode;
     this->type = TYPE_SELECTION;
 }
 
 StatementNode::StatementNode(ExpressionStatementNode *expressionStatementNode) {
-    this();
+    StatementNode();
     this->expressionStatementNode = expressionStatementNode;
     this->type = TYPE_EXPRESSION;
 }
 
 StatementNode::StatementNode(JumpStatementNode *jumpStatementNode) {
-    this();
+    StatementNode();
     this->jumpStatementNode = jumpStatementNode;
     this->type = TYPE_JUMP;
 }
@@ -151,7 +151,7 @@ IterationStatementNode::IterationStatementNode() {
 }
 
 IterationStatementNode::IterationStatementNode(ExpressionVNode *expressionVNode, LoopBodyNode *loopBodyNode) {
-    this();
+    IterationStatementNode();
     this->expressionVNode = expressionVNode;
     this->loopBodyNode = loopBodyNode;
     this->type = TYPE_WHILE;
@@ -159,14 +159,14 @@ IterationStatementNode::IterationStatementNode(ExpressionVNode *expressionVNode,
 
 IterationStatementNode::IterationStatementNode(CompoundStatementNode *compoundStatementNode,
                                                ExpressionVNode *expressionVNode) {
-    this();
+    IterationStatementNode();
     this->compoundStatementNode = compoundStatementNode;
     this->expressionVNode = expressionVNode;
     this->type = TYPE_DO_WHILE;
 }
 
 IterationStatementNode::IterationStatementNode(ForConditionNode *forConditionNode, LoopBodyNode *loopBodyNode) {
-    this();
+    IterationStatementNode();
     this->forConditionNode = forConditionNode;
     this->loopBodyNode = loopBodyNode;
     this->type = TYPE_FOR;
@@ -194,7 +194,7 @@ ForConditionNode::ForConditionNode(ForInitListNode *forInitListNode, ExpressionV
 }
 
 ConstantNode::ConstantNode(type_var type, int integer, double double_number, char character){
-    this->type = tpye;
+    this->type = type;
     this->integer = integer;
     this->double_number = double_number;
     this->character = character;
@@ -210,12 +210,12 @@ ForInitListNode::ForInitListNode() {
 }
 
 ForInitListNode::ForInitListNode(vector<ExpressionVNode *> *expressionList) {
-    this();
+    ForInitListNode();
     this->expressionList = expressionList;
 }
 
 ForInitListNode::ForInitListNode(ForDeclarationNode *forDeclarationNode) {
-    this();
+    ForInitListNode();
     this->forDeclarationNode = forDeclarationNode;
 }
 
@@ -241,11 +241,11 @@ SelectionStatementNode::SelectionStatementNode(SwitchStatementNode *switchStatem
 IfStatementNode::IfStatementNode(ExpressionVNode *expressionVNode, IfBodyNode *ifBodyNode) {
     this->expressionVNode = expressionVNode;
     this->ifBodyNode = ifBodyNode;
-    this->elseBodyNode = expressionVNode;
+    this->elseBodyNode = NULL;
 }
 
 IfStatementNode::IfStatementNode(ExpressionVNode *expressionVNode, IfBodyNode *ifBodyNode, IfBodyNode *elseBodyNode) {
-    this(expressionVNode, ifBodyNode);
+    IfStatementNode(expressionVNode, ifBodyNode);
     this->elseBodyNode = elseBodyNode;
 }
 
