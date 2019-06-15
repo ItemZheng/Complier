@@ -8,4 +8,4 @@ test:	./*
 	./test.sh
 
 clean:
-	rm ./lex.yy.c ./y.tab.c ./y.tab.h ./y.output ./error.log compiler
+	rm -rf ./lex.yy.c ./y.tab.c ./y.tab.h ./y.output ./error.log compiler

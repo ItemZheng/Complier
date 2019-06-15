@@ -28,6 +28,9 @@ extern FILE *yyin;
 %token PLUS PLUS_PLUS MINUS MINUS_MINUS DIV MOD MUL AND_AND OR_OR EQUAL NOT_EQUAL NOT COMMA SEMI ASSIGN
 // %type <>  TODO
 
+%nonassoc IFX
+%nonassoc ELSE
+
 /* Lowest Precedence */
 %right ASSIGN
 %left OR_OR
@@ -463,7 +466,7 @@ selectionStatement:
 
 // Bison 应该会优先选择shift，所以这里没有二义性
 ifStatement :
-	IF LEFT_PAREN expression RIGHT_PAREN ifBody {
+	IF LEFT_PAREN expression RIGHT_PAREN ifBody %prec IFX{
 
 	}
 	|  IF LEFT_PAREN expression RIGHT_PAREN ifBody ELSE elseBody {
