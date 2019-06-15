@@ -26,10 +26,19 @@ extern FILE *yyin;
 %token IDENTIFIER INTEGER DOUBLE_NUMBER CHARACTER STRING SINGLE_COMMENT COMMENTS COLON
 %token LEFT_PAREN RIGHT_PAREN LEFT_BRACKET RIGHT_BRACKET LEFT_BRACE RIGHT_BRACE LESS LESS_EQUAL GREATER GREATER_EQUAL
 %token PLUS PLUS_PLUS MINUS MINUS_MINUS DIV MOD MUL AND_AND OR_OR EQUAL NOT_EQUAL NOT COMMA SEMI ASSIGN
-
-%left MINUS
-%nonassoc NEG
 // %type <>  TODO
+
+/* Lowest Precedence */
+%right ASSIGN
+%left OR_OR
+%left AND_AND
+%left EQUAL NOT_EQUAL
+%left LESS LESS_EQUAL GREATER GREATER_EQUAL
+%left PLUS MINUS
+%left MOD MUL DIV
+%right NOT PLUS_PLUS MINUS_MINUS NEG
+%left LEFT_PAREN
+/* Highest Precedence */
 
 %%
 
@@ -392,9 +401,7 @@ loopBody:
 	| compoundStatement {
 
 	}
-	| SEMI {
-
-	} ;
+	;
 
 compoundStatement: LEFT_BRACE statements RIGHT_BRACE {
 
@@ -414,20 +421,12 @@ forExpression:
 	;
 
 incrementExpressionList:
-	expressions {
+	expression_list {
 
 	}| /*Empty*/ {
 
 	}
 	;
-
-expressions:
-	expression COMMA expressions {
-
-	}
-	| expression {
-
-	};
 
 
 forInitList :
@@ -437,7 +436,7 @@ forInitList :
   	| forDeclaration {
 
   	}
-  	| expressions {
+  	| expression_list {
 
   	};
 
