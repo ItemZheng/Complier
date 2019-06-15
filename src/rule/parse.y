@@ -105,7 +105,7 @@ var_decl :
 	IDENTIFIER {
 
 	}
-	| IDENTIFIER ASSIGN expression {
+	| IDENTIFIER ASSIGN expressionv {
 
 	}
 	| array_identifier {
@@ -142,12 +142,19 @@ array_init_list:
 	}
 	;
 
-expression_list: expression_list COMMA expression {
+expression_list: expression_list COMMA expressionv {
 
 }
-	| expression{
+	| expressionv{
 
 	};
+
+expressionv: var ASSIGN expressionv{
+
+	}
+	| expression{
+
+	}
 
 expression:
 	expression PLUS expression{
@@ -165,7 +172,7 @@ expression:
 	| expression MOD expression {
 
 	}
-	| LEFT_PAREN expression RIGHT_PAREN {
+	| LEFT_PAREN expressionv RIGHT_PAREN {
 
 	}
 	| expression LESS expression {
@@ -196,9 +203,6 @@ expression:
 
 	}
 	| MINUS expression %prec NEG {
-
-	}
-	| var ASSIGN expression {
 
 	}
 	| PLUS_PLUS var {
@@ -258,9 +262,9 @@ args:
 
 
 args_list:
-	args_list COMMA expression {
+	args_list COMMA expressionv {
 
-	}| expression {
+	}| expressionv {
 
 	};
 
@@ -336,7 +340,7 @@ function_statements:
 	;
 
 return_statement:
-	RETURN expression SEMI {
+	RETURN expressionv SEMI {
 
 	}
 	|  /* EMPTY */ {
@@ -373,7 +377,7 @@ statement:
 	;
 
 expressionStatement:
-	expression SEMI {
+	expressionv SEMI {
 
 	}
 	| SEMI {
@@ -381,7 +385,7 @@ expressionStatement:
 	};
 
 iterationStatement:
-    WHILE LEFT_PAREN expression RIGHT_PAREN loopBody {
+    WHILE LEFT_PAREN expressionv RIGHT_PAREN loopBody {
 
     }
     | 	DO compoundStatement WHILE LEFT_PAREN expression RIGHT_PAREN SEMI {
@@ -410,7 +414,7 @@ forCondition: forInitList SEMI forExpression SEMI incrementExpressionList {
 };
 
 forExpression:
-	expression {
+	expressionv {
 
 	}
 	| /*Empty*/ {
@@ -461,10 +465,10 @@ selectionStatement:
 
 // Bison 应该会优先选择shift，所以这里没有二义性
 ifStatement :
-	IF LEFT_PAREN expression RIGHT_PAREN ifBody %prec IFX{
+	IF LEFT_PAREN expressionv RIGHT_PAREN ifBody %prec IFX{
 
 	}
-	|  IF LEFT_PAREN expression RIGHT_PAREN ifBody ELSE elseBody {
+	|  IF LEFT_PAREN expressionv RIGHT_PAREN ifBody ELSE elseBody {
 
 	}
 	;
@@ -489,7 +493,7 @@ elseBody:
 	;
 
 switchStatement:
- 	SWITCH LEFT_PAREN expression RIGHT_PAREN LEFT_BRACE labeledStatementList RIGHT_BRACE {
+ 	SWITCH LEFT_PAREN expressionv RIGHT_PAREN LEFT_BRACE labeledStatementList RIGHT_BRACE {
 
  	}
  	;
