@@ -49,7 +49,8 @@ extern FILE *yyin;
 program:
     	declaration_list {
 		// create root
-	};
+	}
+	;
 
 declaration_list:
  	declaration_list declaration {
@@ -276,16 +277,10 @@ declaration:
 	;
 
 function_declaration:
-	function_declaration_only{
+	function_decl SEMI {
 
 	}
 	| function_definition {
-
-	}
-	;
-
-function_declaration_only:
-	function_decl SEMI {
 
 	}
 	;
