@@ -18,9 +18,13 @@ ArrayInitNode * array_init){
     this->array_init = array_init;
 }
 
-ArrayIdentifierNode::ArrayIdentifierNode(string * identifier, int size, int index){
+ArrayIdentifierNode::ArrayIdentifierNode(string * identifier, int size){
     this->identifier = identifier;
     this->size = size;
+}
+
+ArrayAccessNode::ArrayAccessNode(string * identifier, int index){
+    this->identifier = identifier;
     this->index = index;
 }
 
@@ -35,10 +39,10 @@ ExpressionVNode::ExpressionVNode(vector<VarNode *> * var_list, ExpressionNode * 
     this->expression = expression;
 }
 
-VarNode::VarNode(type_identifier type, string * identifier, ArrayIdentifierNode * array_identifier){
+VarNode::VarNode(type_identifier type, string * identifier, ArrayAccessNode * array_access){
     this->type = type;
     this->identifier = identifier;
-    this->array_identifier = array_identifier;
+    this->array_access = array_access;
 }
 
 ExpressionNode::ExpressionNode(type_expression type, ExpressionNode * left, ExpressionNode * right,

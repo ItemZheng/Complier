@@ -23,5 +23,5 @@ w = function();
 x = function(2, 6);
 y = function(4 + 5, 6);
 z = 1;
-5 * x = 1;
+5 * (x = 1);
 }
