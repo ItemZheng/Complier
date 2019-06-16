@@ -1,3 +1,23 @@
+int function1(){
+
+}
+
+int function2(){
+
+}
+
+int function3(){
+
+}
+
+int function4(){
+
+}
+
+int function5(){
+
+}
+
 int a;
 double b, c, d;
 float e = 2.5;
@@ -7,6 +27,7 @@ char j = '5', k = '6';
 int array1[5];
 int array2[2] = {1, 2};
 int l = 5 + 6;
+int array3[6];
 int m = array3[5];
 int n = function1();
 int o = function2(3, 4, '5');

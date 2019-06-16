@@ -605,5 +605,5 @@ int main(void)
     	exit(1);
     }
     root->buildSymbolTable();
-    root->visit();
+    // root->visit();
 }
