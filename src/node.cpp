@@ -46,13 +46,14 @@ VarNode::VarNode(type_identifier type, string * identifier, ArrayAccessNode * ar
 }
 
 ExpressionNode::ExpressionNode(type_expression type, ExpressionNode * left, ExpressionNode * right,
-VarNode * var, ConstantNode * constant, CallNode * call){
+VarNode * var, ConstantNode * constant, CallNode * call, ExpressionVNode * expressionv){
     this->type = type;
     this->left = left;
     this->right = right;
     this->var = var;
     this->constant = constant;
     this->call = call;
+    this->expressionv = expressionv;
 }
 #include "node.h"
 

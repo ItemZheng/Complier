@@ -44,7 +44,8 @@ typedef enum{
     EXP_MINUS_MINUS_R,
     EXP_VAR,
     EXP_CONST,
-    EXP_CALL
+    EXP_CALL,
+    EXP_EXPV
 } type_expression;
 
 #endif

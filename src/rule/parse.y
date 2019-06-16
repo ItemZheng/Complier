@@ -202,73 +202,73 @@ expressionv: var ASSIGN expressionv{
 
 expression:
 	expression PLUS expression{
-		$$ = new ExpressionNode(EXP_PLUS, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_PLUS, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression MINUS expression {
-		$$ = new ExpressionNode(EXP_MINUS, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_MINUS, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression MUL expression {
-		$$ = new ExpressionNode(EXP_MUL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_MUL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression DIV expression {
-		$$ = new ExpressionNode(EXP_DIV, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_DIV, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression MOD expression {
-		$$ = new ExpressionNode(EXP_MOD, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_MOD, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| LEFT_PAREN expressionv RIGHT_PAREN {
-		$$ = $2;
+		$$ = new ExpressionNode(EXP_EXPV, NULL, NULL, NULL, NULL, NULL, (ExpressionVNode *)$2);
 	}
 	| expression LESS expression {
-		$$ = new ExpressionNode(EXP_LESS, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_LESS, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression LESS_EQUAL expression {
-		$$ = new ExpressionNode(EXP_LESS_EQUAL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_LESS_EQUAL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression GREATER expression {
-		$$ = new ExpressionNode(EXP_GREATER, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_GREATER, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression GREATER_EQUAL expression {
-		$$ = new ExpressionNode(EXP_GREATER_EQUAL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_GREATER_EQUAL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression AND_AND expression {
-		$$ = new ExpressionNode(EXP_AND_AND, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_AND_AND, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression OR_OR expression {
-		$$ = new ExpressionNode(EXP_OR_OR, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_OR_OR, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| NOT expression {
-		$$ = new ExpressionNode(EXP_NOT, (ExpressionNode *)$2, NULL, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_NOT, (ExpressionNode *)$2, NULL, NULL, NULL, NULL, NULL);
 	}
 	| expression EQUAL expression {
-		$$ = new ExpressionNode(EXP_EQUAL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_EQUAL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| expression NOT_EQUAL expression {
-		$$ = new ExpressionNode(EXP_NOT_EQUAL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_NOT_EQUAL, (ExpressionNode *)$1, (ExpressionNode *)$3, NULL, NULL, NULL, NULL);
 	}
 	| MINUS expression %prec NEG {
-		$$ = new ExpressionNode(EXP_MINUS_SIGN, (ExpressionNode *)$2, NULL, NULL, NULL, NULL);
+		$$ = new ExpressionNode(EXP_MINUS_SIGN, (ExpressionNode *)$2, NULL, NULL, NULL, NULL, NULL);
 	}
 	| PLUS_PLUS var {
-		$$ = new ExpressionNode(EXP_PLUS_PLUS_L, NULL, NULL, (VarNode *)$2, NULL, NULL);
+		$$ = new ExpressionNode(EXP_PLUS_PLUS_L, NULL, NULL, (VarNode *)$2, NULL, NULL, NULL);
 	}
 	| var PLUS_PLUS {
-		$$ = new ExpressionNode(EXP_PLUS_PLUS_R, NULL, NULL, (VarNode *)$1, NULL, NULL);
+		$$ = new ExpressionNode(EXP_PLUS_PLUS_R, NULL, NULL, (VarNode *)$1, NULL, NULL, NULL);
 	}
 	| MINUS_MINUS var {
-		$$ = new ExpressionNode(EXP_MINUS_MINUS_L, NULL, NULL, (VarNode *)$2, NULL, NULL);
+		$$ = new ExpressionNode(EXP_MINUS_MINUS_L, NULL, NULL, (VarNode *)$2, NULL, NULL, NULL);
 	}
 	| var MINUS_MINUS {
-		$$ = new ExpressionNode(EXP_MINUS_MINUS_R, NULL, NULL, (VarNode *)$1, NULL, NULL);
+		$$ = new ExpressionNode(EXP_MINUS_MINUS_R, NULL, NULL, (VarNode *)$1, NULL, NULL, NULL);
 	}
 	| var {
-		$$ = new ExpressionNode(EXP_VAR, NULL, NULL, (VarNode *)$1, NULL, NULL);
+		$$ = new ExpressionNode(EXP_VAR, NULL, NULL, (VarNode *)$1, NULL, NULL, NULL);
 	}
 	| call {
-		$$ = new ExpressionNode(EXP_CALL, NULL, NULL, NULL, NULL, (CallNode *)$1);
+		$$ = new ExpressionNode(EXP_CALL, NULL, NULL, NULL, NULL, (CallNode *)$1, NULL);
 	}
 	| constant {
-		$$ = new ExpressionNode(EXP_CONST, NULL, NULL, NULL,(ConstantNode *)$1, NULL);
+		$$ = new ExpressionNode(EXP_CONST, NULL, NULL, NULL,(ConstantNode *)$1, NULL, NULL);
 	}
 	;
 

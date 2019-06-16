@@ -472,9 +472,10 @@ public:
     VarNode *var;
     ConstantNode *constant;
     CallNode *call;
+    ExpressionVNode * expressionv;
 public:
     ExpressionNode(type_expression type, ExpressionNode *left, ExpressionNode *right,
-                   VarNode *var, ConstantNode *constant, CallNode *call);
+                   VarNode *var, ConstantNode *constant, CallNode *call, ExpressionVNode *expressionv);
 
     ~ExpressionNode();
 
