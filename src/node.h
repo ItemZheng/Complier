@@ -2,20 +2,33 @@
 // Created by BossWang & ItemZheng on 2019-06-15.
 //
 
-#include<vector>
+#include <vector>
 #include"type.h"
-#include<string>
+#include <string>
+#include "symtab.h"
 
 #ifndef COMPILER_NODE_H
 #define COMPILER_NODE_H
 
 using namespace std;
 
+extern SymbolTable * symTab;
+extern char *yytext;
+extern int yylineno;
+
 class Node {
+public:
+    int lineno;
+    string text;
+public:
+    Node();
 public:
     virtual void visit() = 0;
 
     virtual void codeGen() = 0;
+
+    virtual void buildSymbolTable() = 0;
+
 };
 
 // Declarations
@@ -101,6 +114,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class DeclarationNode : public Node {
@@ -116,6 +131,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class FunctionDeclarationNode : public Node {
@@ -130,6 +147,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class FunctionDefinitionNode : public Node {
@@ -142,6 +161,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class FunctionDeclNode : public Node {
@@ -155,6 +176,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class FunctionArgNode : public Node {
@@ -167,6 +190,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class FunctionBodyNode : public Node {
@@ -178,6 +203,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class FunctionStatementsNode : public Node {
@@ -190,6 +217,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ReturnStatementNode : public Node {
@@ -201,6 +230,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class StatementNode : public Node {
@@ -233,6 +264,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ExpressionStatementNode : public Node {
@@ -244,6 +277,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class IterationStatementNode : public Node {
@@ -272,6 +307,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class LoopBodyNode : public Node {
@@ -286,6 +323,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class CompoundStatementNode : public Node {
@@ -297,6 +336,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ForConditionNode : public Node {
@@ -311,6 +352,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ForInitListNode : public Node {
@@ -327,6 +370,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ForDeclarationNode : public Node {
@@ -339,6 +384,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class JumpStatementNode : public Node {
@@ -353,6 +400,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class VarDeclarationNode : public Node {
@@ -360,13 +409,15 @@ public:
     type_var type;
     vector<VarDeclNode *> *var_declaration_list;
 public:
-    VarDeclarationNode(type_var type, vector<VarDeclNode *> * vdl);
+    VarDeclarationNode(type_var type, vector<VarDeclNode *> *vdl);
 
     ~VarDeclarationNode();
 
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class VarDeclNode : public Node {
@@ -377,6 +428,8 @@ public:
     int assign;
     ExpressionVNode *expressionv;
     ArrayInitNode *array_init;
+
+    type_var typeVar;
 public:
     VarDeclNode(type_identifier type, string *identifier,
                 ArrayIdentifierNode *array_identifier, int assign, ExpressionVNode *expressionv,
@@ -387,6 +440,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ArrayIdentifierNode : public Node {
@@ -401,9 +456,11 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
-class ArrayAccessNode : public Node{
+class ArrayAccessNode : public Node {
 public:
     std::string *identifier;
     int index;
@@ -412,9 +469,11 @@ public:
 
     ~ArrayAccessNode();
 
-    void visit(){}
+    void visit() {}
 
-    void codeGen(){}
+    void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ArrayInitNode : public Node {
@@ -430,6 +489,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ExpressionVNode : public Node {
@@ -447,6 +508,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class VarNode : public Node {
@@ -462,6 +525,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ExpressionNode : public Node {
@@ -472,15 +537,18 @@ public:
     VarNode *var;
     ConstantNode *constant;
     CallNode *call;
-    ExpressionVNode * expressionv;
+    ExpressionVNode *expressionv;
 public:
     ExpressionNode(type_expression type, ExpressionNode *left, ExpressionNode *right,
                    VarNode *var, ConstantNode *constant, CallNode *call, ExpressionVNode *expressionv);
+
     ~ExpressionNode();
 
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class ConstantNode : public Node {
@@ -497,6 +565,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class CallNode : public Node {
@@ -511,6 +581,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class SelectionStatementNode : public Node {
@@ -525,6 +597,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 
@@ -541,6 +615,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class IfBodyNode : public Node {
@@ -555,6 +631,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class SwitchStatementNode : public Node {
@@ -567,6 +645,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 class LabeledStatementNode : public Node {
@@ -585,6 +665,8 @@ public:
     void visit() {}
 
     void codeGen() {}
+
+    void buildSymbolTable();
 };
 
 #endif //COMPILER_NODE_H
