@@ -1,5 +1,7 @@
 %{
 #include "node.h"
+#include "error.h"
+#include "symtab.h"
 #include <math.h>
 #include <string>
 #include <iostream>
@@ -14,6 +16,7 @@ extern int yylineno;
 extern FILE *yyin;
 
 ProgramNode * root = NULL;
+SymbolTable * symTab = new SymbolTable();
 
 %}
 %union {
@@ -403,7 +406,7 @@ return_statement:
         ;
 
 statements:
- 	statements statement{
+ 	statements statement {
 		if($1 == NULL) {
 			$$ = new vector<StatementNode *>();
 		} else {
@@ -577,7 +580,8 @@ labeledStatement :
 int yyerror(char const *str)
 {
     extern char *yytext;
-    fprintf(stderr, "Parser error near %s at line %d\n", yytext, yylineno);
+    Error* err = new Error(Error::ERROR_SYNTAX, yylineno, yytext);
+    err->Print();
     return 0;
 }
 
@@ -585,7 +589,14 @@ int main(void)
 {
 //	# define YYDEBUG 1
 //	yydebug = 1;
+
+
     yyin = stdin;
+//    FILE* fp=fopen("../src/test/test_exp.c", "r");
+//    yyin = fp;
+//    if(fp == NULL){
+//    	exit(1);
+//    }
     if (yyparse()) {
         exit(1);
     }
@@ -593,5 +604,6 @@ int main(void)
     	printf("Fail");
     	exit(1);
     }
-	root->visit();
+    root->buildSymbolTable();
+    root->visit();
 }

@@ -4,6 +4,7 @@ int main(){
         int a = 5;
     }
 
+    int i;
     for(i = 5; i < 6; i++){
         ;
     }
@@ -17,7 +18,7 @@ int main(){
     while(1){
         int a = 5;
     }
-
+    int a, b;
     while(a == b){
         break;
     }
@@ -48,7 +49,7 @@ int main(){
     else{
        ; 
     }
-
+    int c, d;
     if(c == 0){
         if(d == 0){
             ;
@@ -57,7 +58,7 @@ int main(){
             ;
         }
     }
-
+    int e = 0, f;
     if(e == 0){
         ;
     }

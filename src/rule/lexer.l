@@ -9,10 +9,12 @@
 %option yylineno 
 %{
 	#include "node.h"
+	#include "symtab.h"
     #include <string>
     using namespace std;
     #include "y.tab.h"
     #include <iostream>
+	extern SymbolTable * symTab;
 %}
 
 white [ \t\n\r]+

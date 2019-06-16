@@ -14,7 +14,8 @@ typedef enum{
     TYPE_SHORT,
     TYPE_VOID,
     TYPE_DOUBLE,
-    TYPE_CHAR
+    TYPE_CHAR,
+    TYPE_FUNC
 } type_var;
 
 typedef enum{
