@@ -277,7 +277,7 @@ var:
 		$$ = new VarNode(SINGLE, $1, NULL);
 	}
 	| array_access {
-		$$ = new VarNode(SINGLE, NULL, (ArrayAccessNode *)$1);
+		$$ = new VarNode(ARRAY, NULL, (ArrayAccessNode *)$1);
 	}
 	;
 
@@ -364,9 +364,9 @@ function_arg_list:
 		$$ = new vector<FunctionArgNode *>();
 		$$->push_back((FunctionArgNode *)$1);
 	}
-	|  function_arg COMMA function_arg_list {
-		$3->push_back((FunctionArgNode *)$1);
-		$$ = $3;
+	|  function_arg_list COMMA function_arg {
+		$1->push_back((FunctionArgNode *)$3);
+		$$ = $1;
         }
         ;
 
@@ -394,19 +394,22 @@ return_statement:
 	RETURN expressionv SEMI {
 		$$ = new ReturnStatementNode((ExpressionVNode *)$2);
 	}
+	| RETURN SEMI{
+		$$ = new ReturnStatementNode(NULL);
+	}
 	|  /* EMPTY */ {
 		$$ = NULL;
 	}
         ;
 
 statements:
- 	statement statements {
-		if($2 == NULL) {
+ 	statements statement{
+		if($1 == NULL) {
 			$$ = new vector<StatementNode *>();
 		} else {
-			$$ = $2;
+			$$ = $1;
 		}
-		$$->push_back((StatementNode *) $1);
+		$$->push_back((StatementNode *) $2);
 	}
 	|  /* EMPTY */ {
 		$$ = NULL;
@@ -547,13 +550,13 @@ switchStatement:
 
 
 labeledStatementList:
-	labeledStatement labeledStatementList {
-		if($2 == NULL){
+	labeledStatementList labeledStatement{
+		if($1 == NULL){
 			$$ = new vector<LabeledStatementNode *>();
 		} else {
-			$$ = $2;
+			$$ = $1;
 		}
-		$$->push_back((LabeledStatementNode *)$1);
+		$$->push_back((LabeledStatementNode *)$2);
 	}
 	| /*EMPTY*/ {
 		$$ = NULL;
@@ -590,4 +593,5 @@ int main(void)
     	printf("Fail");
     	exit(1);
     }
+	root->visit();
 }

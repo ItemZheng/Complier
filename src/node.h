@@ -98,7 +98,7 @@ public:
 public:
     ProgramNode(vector<DeclarationNode *> *declaration_list);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -113,7 +113,7 @@ public:
 
     DeclarationNode(VarDeclarationNode *varDeclarationNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -127,7 +127,7 @@ public:
 
     FunctionDeclarationNode(FunctionDefinitionNode *functionDefinitionNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -139,7 +139,7 @@ public:
 public:
     FunctionDefinitionNode(FunctionDeclNode *functionDeclNode, FunctionBodyNode *functionBodyNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -152,7 +152,7 @@ public:
 public:
     FunctionDeclNode(type_var type, string identifier, vector<FunctionArgNode *> *function_args);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -164,7 +164,7 @@ public:
 public:
     FunctionArgNode(type_var type, string identifier);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -175,7 +175,7 @@ public:
 public:
     FunctionBodyNode(FunctionStatementsNode *functionStatementsNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -187,7 +187,7 @@ public:
 public:
     FunctionStatementsNode(vector<StatementNode *> *statements, ReturnStatementNode *returnStatementNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -198,7 +198,7 @@ public:
 public:
     ReturnStatementNode(ExpressionVNode *expressionVNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -230,7 +230,7 @@ public:
 
     StatementNode(JumpStatementNode *jumpStatementNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -241,7 +241,7 @@ public:
 public:
     ExpressionStatementNode(ExpressionVNode *expressionVNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -269,7 +269,7 @@ public:
 
     IterationStatementNode(ForConditionNode *forConditionNode, LoopBodyNode *loopBodyNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -283,7 +283,7 @@ public:
 
     LoopBodyNode(CompoundStatementNode *compoundStatementNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -294,7 +294,7 @@ public:
 public:
     CompoundStatementNode(vector<StatementNode *> *statements);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -308,7 +308,7 @@ public:
     ForConditionNode(ForInitListNode *forInitListNode, ExpressionVNode *forExpression,
                      vector<ExpressionVNode *> *incrementExpressionList);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -324,7 +324,7 @@ public:
 
     ForInitListNode(ForDeclarationNode *forDeclarationNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -336,7 +336,7 @@ public:
 public:
     ForDeclarationNode(type_var type, vector<VarDeclNode *> *varDeclarationList);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -350,7 +350,7 @@ public:
 public:
     JumpStatementNode(int type);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -364,7 +364,7 @@ public:
 
     ~VarDeclarationNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -384,7 +384,7 @@ public:
 
     ~VarDeclNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -398,7 +398,7 @@ public:
 
     ~ArrayIdentifierNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -412,7 +412,7 @@ public:
 
     ~ArrayAccessNode();
 
-    void visit(){}
+    void visit();
 
     void codeGen(){}
 };
@@ -427,7 +427,7 @@ public:
 
     ~ArrayInitNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -444,7 +444,7 @@ public:
 
     ~ExpressionVNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -459,7 +459,7 @@ public:
 
     ~VarNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -478,7 +478,7 @@ public:
                    VarNode *var, ConstantNode *constant, CallNode *call, ExpressionVNode *expressionv);
     ~ExpressionNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -494,7 +494,7 @@ public:
 
     ~ConstantNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -508,7 +508,7 @@ public:
 
     ~CallNode();
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -522,7 +522,7 @@ public:
 
     SelectionStatementNode(SwitchStatementNode *switchStatementNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -538,7 +538,7 @@ public:
 
     IfStatementNode(ExpressionVNode *expressionVNode, IfBodyNode *ifBodyNode, IfBodyNode *elseBodyNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -552,7 +552,7 @@ public:
 
     IfBodyNode(StatementNode *statementNode);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -564,7 +564,7 @@ public:
 public:
     SwitchStatementNode(ExpressionVNode *expressionVNode, vector<LabeledStatementNode *> *labeledStatementList);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
@@ -572,7 +572,7 @@ public:
 class LabeledStatementNode : public Node {
 public:
     static const int TYPE_CASE = 0;
-    static const int TYPE_DEFAULT = 0;
+    static const int TYPE_DEFAULT = 1;
 public:
     int type;
     ConstantNode *constantNode;
@@ -582,7 +582,7 @@ public:
 
     LabeledStatementNode(vector<StatementNode *> *statements);
 
-    void visit() {}
+    void visit();
 
     void codeGen() {}
 };
