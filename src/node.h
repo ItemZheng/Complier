@@ -15,6 +15,7 @@ using namespace std;
 extern SymbolTable * symTab;
 extern char *yytext;
 extern int yylineno;
+extern vector<Error*> errors;
 
 class Node {
 public:
@@ -37,6 +38,10 @@ public:
 };
 
 bool typeEqual(Node *n1, Node *n2);
+
+void errorsPrint();
+
+void errorHandleBetweenTraversal();
 
 // Declarations
 class DeclarationNode;

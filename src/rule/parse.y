@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string>
 #include <iostream>
+#include <vector>
 #define YYDEBUG 1
 
 using namespace std;
@@ -17,6 +18,7 @@ extern FILE *yyin;
 
 ProgramNode * root = NULL;
 SymbolTable * symTab = new SymbolTable();
+vector<Error*> errors = vector<Error*>();
 
 %}
 %union {
@@ -602,7 +604,7 @@ int main(int argv, char **argc)
     	cout << "Cannot open file: " << string(argc[0]) << endl;
 	exit(1);
     }
-    Error::setCurrentFile(string(argc[0]));
+    Error::setCurrentFile(string(argc[1]));
     yyin = fp;
     if (yyparse()) {
         exit(1);

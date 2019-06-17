@@ -242,16 +242,16 @@ void ExpressionVNode::buildSymbolTable() {
         for (int j = 0; (j + 1) < var_list->size(); j++) {
             if(!typeEqual((*var_list)[j], (*var_list)[j + 1])){
                 Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
-                err->Print();
-                exit(1);
+                errors.push_back(err);
+                errorHandleBetweenTraversal();
             }
         }
         if (expression != NULL) {
             if (var_list->size() > 0) {
                 if (!typeEqual((*var_list)[0], expression)) {
                     Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
-                    err->Print();
-                    exit(1);
+                    errors.push_back(err);
+                    errorHandleBetweenTraversal();
                 }
             }
         }
@@ -469,15 +469,14 @@ void ExpressionNode::buildSymbolTable() {
             }
             if (!typeEqual(left, right)) {
                 Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
-                err->Print();
-                exit(1);
-            } else {
-                // todo
-                if (left != NULL) {
-                    nodeTypeVar = left->nodeTypeVar;
-                    nodeSize = left->nodeSize;
-                    nodeTypeIdentifier = left->nodeTypeIdentifier;
-                }
+                errors.push_back(err);
+                errorHandleBetweenTraversal();
+            }
+            // todo
+            if (left != NULL) {
+                nodeTypeVar = left->nodeTypeVar;
+                nodeSize = left->nodeSize;
+                nodeTypeIdentifier = left->nodeTypeIdentifier;
             }
             break;
         case EXP_EXPV:
@@ -508,9 +507,11 @@ void ExpressionNode::buildSymbolTable() {
                 var->buildSymbolTable();
                 if (var->nodeTypeIdentifier != SINGLE || var->nodeTypeVar != TYPE_INT) {
                     Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
-                    err->Print();
-                    exit(1);
+                    errors.push_back(err);
+                    errorHandleBetweenTraversal();
                 }
+                nodeTypeIdentifier = SINGLE;
+                nodeTypeVar = TYPE_INT;
             }
             break;
         case EXP_VAR:
@@ -523,13 +524,13 @@ void ExpressionNode::buildSymbolTable() {
                     node = symTab->sym_look_up(*(var->identifier));
                 } else {
                     Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
-                    err->Print();
-                    exit(1);
+                    errors.push_back(err);
+                    errorHandleBetweenTraversal();
                 }
                 if(node->typeIdentifier == FUNCTION){
                     Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
-                    err->Print();
-                    exit(1);
+                    errors.push_back(err);
+                    errorHandleBetweenTraversal();
                 }
                 nodeTypeVar = var->nodeTypeVar;
                 nodeTypeIdentifier = var->nodeTypeIdentifier;
@@ -570,6 +571,10 @@ void ProgramNode::buildSymbolTable() {
         for (int i = 0; i < declaration_list->size(); i++) {
             (*declaration_list)[i]->buildSymbolTable();
         }
+    }
+    if(errors.size() > 0){
+        errorsPrint();
+        exit(1);
     }
 }
 
@@ -1452,4 +1457,19 @@ bool typeEqual(Node *n1, Node *n2) {
         }
     }
     return false;
+}
+
+void errorHandleBetweenTraversal(){
+    if(errors.size() >= 20){
+        errorsPrint();
+        cout << "Too many errors. Compile Stop. " << endl;
+    }
+}
+
+void errorsPrint(){
+    if(errors.size() > 0){
+        for(int i = 0; i < errors.size(); i++){
+            errors[i]->Print();
+        }
+    }
 }
