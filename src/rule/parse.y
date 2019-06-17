@@ -185,10 +185,11 @@ array_init_list:
 	}
 	;
 
-expression_list: expression_list COMMA expressionv {
+expression_list:
+	expression_list COMMA expressionv {
 		$1->push_back((ExpressionVNode *)$3);
 		$$ = $1;
-}
+	}
 	| expressionv{
 		$$ = new vector<ExpressionVNode *>;
 		$$->push_back((ExpressionVNode *)$1);
@@ -585,25 +586,28 @@ int yyerror(char const *str)
     return 0;
 }
 
-int main(void)
+int main(int argv, char **argc)
 {
 //	# define YYDEBUG 1
 //	yydebug = 1;
 
+    if(argv != 2){
+	cout << "Usage: " << string(argc[0]) << " file" << endl;
+	exit(0);
+    }
 
-    yyin = stdin;
-//    FILE* fp=fopen("../src/test/test_exp.c", "r");
-//    yyin = fp;
-//    if(fp == NULL){
-//    	exit(1);
-//    }
+    // yyin = stdin;
+    FILE* fp=fopen(argc[1], "r");
+    if(fp == NULL){
+    	cout << "Cannot open file: " << string(argc[0]) << endl;
+	exit(1);
+    }
+    Error::setCurrentFile(string(argc[0]));
+    yyin = fp;
     if (yyparse()) {
         exit(1);
     }
-    if(root == NULL){
-    	printf("Fail");
-    	exit(1);
-    }
+
     root->buildSymbolTable();
     // root->visit();
 }

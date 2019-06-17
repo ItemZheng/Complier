@@ -5,9 +5,8 @@ rm error.log
 for file in `ls ./test/Success/*`;
 do
 	echo -n "Test $file ............."
-	cat ${file} | (./compiler 1>>error.log 2>> error.log)
+	./compiler ${file} 1>>error.log 2>> error.log
 	if [[ $? -ne 0 ]]; then
-		echo ${file} >> error.log
 		echo "  " >> error.log
 		echo "Failed"
 	else
@@ -18,9 +17,8 @@ echo -e "\n\n--------- TEST BEGIN EXPECT FAILED---------"
 for file in `ls ./test/Fail/*`;
 do
 	echo -n "Test $file ............."
-	cat ${file} | (./compiler 1>>error.log 2>> error.log)
+	./compiler ${file} 1>>error.log 2>> error.log
 	if [[ $? -ne 0 ]]; then
-		echo ${file} >> error.log
 		echo " " >> error.log
 		echo "Pass"
 	else

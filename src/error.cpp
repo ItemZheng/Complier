@@ -4,6 +4,8 @@
 
 #include "error.h"
 
+string Error::currentFile = "";
+
 Error::Error(int type, int lineno, char *near) {
     this->type = type;
     this->lineno = lineno;
@@ -17,7 +19,7 @@ Error::Error(int type, int lineno, string near) {
 }
 
 void Error::Print() {
-    cout << "Line: " << lineno << "\t";
+    cout << currentFile << "\tLine: " << lineno << "\t";
     switch (type) {
         case ERROR_SYNTAX:
             cout << "Error: Syntax Error near '" << near << "'." << endl;
@@ -31,10 +33,17 @@ void Error::Print() {
         case ERROR_UNDECLARED_FUNCTION:
             cout << "Error: Use of undeclared function '" << near << "'." << endl;
             break;
+        case ERROR_TYPE_NOT_MATCH:
+            cout << "Error: Type not match " << endl;
+            break;
         case ERROR_UNKNOWN:
         default:
             cout << "Error: Unknown Error near '" << near << "'." << endl;
             break;
     }
 
+}
+
+void Error::setCurrentFile(string file) {
+    currentFile = file;
 }

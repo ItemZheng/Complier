@@ -20,6 +20,11 @@ class Node {
 public:
     int lineno;
     string text;
+
+    // super type
+    type_identifier nodeTypeIdentifier;
+    type_var nodeTypeVar;
+    int nodeSize;
 public:
     Node();
 public:
@@ -30,6 +35,8 @@ public:
     virtual void buildSymbolTable() = 0;
 
 };
+
+bool typeEqual(Node *n1, Node *n2);
 
 // Declarations
 class DeclarationNode;

@@ -29,7 +29,7 @@ SymbolNode* SymbolTable::sym_look_up(string name) {
 Error* SymbolTable::sym_insert(SymbolNode *sym) {
     SymbolNode * node = sym_look_up(sym->name);
     // Variable
-    if(sym->typeVar != TYPE_FUNC){
+    if(sym->typeIdentifier != FUNCTION){
         if(node != NULL && node->level == sym->level){
             return new Error(Error::ERROR_REDEFINITION, sym->lineno, sym->name);
         }
@@ -46,9 +46,9 @@ Error* SymbolTable::sym_insert(SymbolNode *sym) {
         } else {
             // 定义
             if(node != NULL){
-                if(node->typeVar == TYPE_FUNC && node->func_type == SymbolNode::FUNC_DEFINE){
+                if(node->typeIdentifier == FUNCTION && node->func_type == SymbolNode::FUNC_DEFINE){
                     return new Error(Error::ERROR_REDEFINITION, sym->lineno, sym->name);
-                } else if(node->typeVar != TYPE_FUNC){
+                } else if(node->typeIdentifier != FUNCTION){
                     return new Error(Error::ERROR_REDEFINITION, sym->lineno, sym->name);
                 }
             }

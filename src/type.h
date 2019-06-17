@@ -15,12 +15,12 @@ typedef enum{
     TYPE_VOID,
     TYPE_DOUBLE,
     TYPE_CHAR,
-    TYPE_FUNC
 } type_var;
 
 typedef enum{
     SINGLE,
-    ARRAY
+    ARRAY,
+    FUNCTION
 } type_identifier;
 
 typedef enum{

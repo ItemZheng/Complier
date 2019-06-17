@@ -18,6 +18,8 @@ public:
     static const int ERROR_UNKNOWN = 2;
     static const int ERROR_UNDECLARED = 3;
     static const int ERROR_UNDECLARED_FUNCTION = 4;
+    static const int ERROR_TYPE_NOT_MATCH = 5;
+    static string currentFile;
 public:
     int type;
     int lineno;
@@ -28,6 +30,8 @@ public:
     Error(int type, int lineno, string near);
 
     void Print();
+
+    static void setCurrentFile(string file);
 };
 
 #endif //COMPILER_ERROR_H
