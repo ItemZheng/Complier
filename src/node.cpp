@@ -241,7 +241,7 @@ void ExpressionVNode::buildSymbolTable() {
     if (var_list != NULL) {
         for (int j = 0; (j + 1) < var_list->size(); j++) {
             if(!typeEqual((*var_list)[j], (*var_list)[j + 1])){
-                Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, "");
+                Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                 err->Print();
                 exit(1);
             }
@@ -249,7 +249,7 @@ void ExpressionVNode::buildSymbolTable() {
         if (expression != NULL) {
             if (var_list->size() > 0) {
                 if (!typeEqual((*var_list)[0], expression)) {
-                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, "");
+                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                     err->Print();
                     exit(1);
                 }
@@ -361,6 +361,8 @@ void ExpressionNode::visit() {
             case EXP_NOT_EQUAL:
                 cout << " != ";
                 break;
+            default:
+                break;
         }
         if (right != NULL) {
             right->visit();
@@ -389,6 +391,8 @@ void ExpressionNode::visit() {
             case EXP_MINUS_MINUS_L:
                 cout << " -- ";
                 break;
+            default:
+                break;
         }
         if (var != NULL) {
             var->visit();
@@ -407,6 +411,8 @@ void ExpressionNode::visit() {
                 break;
             case EXP_MINUS_MINUS_R:
                 cout << " -- ";
+                break;
+            default:
                 break;
         }
     } else if (type == EXP_VAR) {
@@ -462,7 +468,7 @@ void ExpressionNode::buildSymbolTable() {
                 right->buildSymbolTable();
             }
             if (!typeEqual(left, right)) {
-                Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, "");
+                Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                 err->Print();
                 exit(1);
             } else {
@@ -501,7 +507,7 @@ void ExpressionNode::buildSymbolTable() {
             if (var != NULL) {
                 var->buildSymbolTable();
                 if (var->nodeTypeIdentifier != SINGLE || var->nodeTypeVar != TYPE_INT) {
-                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, "");
+                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                     err->Print();
                     exit(1);
                 }
@@ -516,12 +522,12 @@ void ExpressionNode::buildSymbolTable() {
                 } else if(var->type == SINGLE){
                     node = symTab->sym_look_up(*(var->identifier));
                 } else {
-                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, "");
+                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                     err->Print();
                     exit(1);
                 }
                 if(node->typeIdentifier == FUNCTION){
-                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, "");
+                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                     err->Print();
                     exit(1);
                 }
@@ -1054,8 +1060,8 @@ CompoundStatementNode::CompoundStatementNode(vector<StatementNode *> *statements
 void CompoundStatementNode::visit() {
     cout << " { " << endl;
     if (statements != NULL) {
-        for (auto node : *this->statements) {
-            node->visit();
+        for (int i = 0; i < statements->size(); i++) {
+            (*statements)[i]->visit();
         }
     }
     cout << " } " << endl;
@@ -1086,8 +1092,8 @@ void ForConditionNode::visit() {
     }
     cout << " ; ";
     if (incrementExpressionList != NULL) {
-        for (auto node : *this->incrementExpressionList) {
-            node->visit();
+        for (int i = 0; i < incrementExpressionList->size(); i++) {
+            (*incrementExpressionList)[i]->visit();
             cout << " | ";
         }
     }
@@ -1197,8 +1203,8 @@ ForInitListNode::ForInitListNode(ForDeclarationNode *forDeclarationNode) {
 
 void ForInitListNode::visit() {
     if (expressionList != NULL) {
-        for (auto node : *this->expressionList) {
-            node->visit();
+        for (int i = 0; i < expressionList->size(); i++) {
+            (*expressionList)[i]->visit();
             cout << " | ";
         }
     }
@@ -1239,8 +1245,8 @@ void ForDeclarationNode::visit() {
             cout << "undefined type" << " ";
             break;
     }
-    for (auto node : *this->varDeclarationList) {
-        node->visit();
+    for (int i = 0; i < varDeclarationList->size(); i++) {
+        (*varDeclarationList)[i]->visit();
     }
 }
 
@@ -1367,8 +1373,8 @@ void SwitchStatementNode::visit() {
     expressionVNode->visit();
     cout << " ) " << " { ";
     if (labeledStatementList != NULL) {
-        for (auto node : *this->labeledStatementList) {
-            node->visit();
+        for (int i = 0; i < labeledStatementList->size(); i++) {
+            (*labeledStatementList)[i]->visit();
             cout << endl;
         }
     }
@@ -1416,13 +1422,13 @@ void LabeledStatementNode::visit() {
         cout << " case ";
         constantNode->visit();
         cout << " : ";
-        for (auto node : *this->statements) {
-            node->visit();
+        for (int i = 0; i < statements->size(); i++) {
+            (*statements)[i]->visit();
         }
     } else if (type == TYPE_DEFAULT) {
         cout << " default : ";
-        for (auto node : *this->statements) {
-            node->visit();
+        for (int i = 0; i < statements->size(); i++) {
+            (*statements)[i]->visit();
         }
     }
 }

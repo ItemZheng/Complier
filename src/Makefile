@@ -4,7 +4,7 @@ Compiler: ./rule/parse.y ./rule/lexer.l ./node.cpp ./node.h \
 	flex ./rule/lexer.l
 	mv lex.yy.c lex.yy.cpp
 	mv y.tab.c y.tab.cpp
-	g++ -std=c++11 error.cpp node.cpp symtab.cpp lex.yy.cpp y.tab.cpp -o compiler
+	g++ error.cpp node.cpp symtab.cpp lex.yy.cpp y.tab.cpp -o compiler
 
 test: Compiler
 	./test.sh
