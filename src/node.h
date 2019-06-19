@@ -6,6 +6,14 @@
 #include"type.h"
 #include <string>
 #include "symtab.h"
+#include <llvm/IR/Type.h>
+#include <llvm/IR/Value.h>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Module.h>
+#include <llvm/IR/LegacyPassManager.h>
+#include <llvm/IR/IRPrintingPasses.h>
+#include <llvm/Support/raw_ostream.h>
 
 #ifndef COMPILER_NODE_H
 #define COMPILER_NODE_H
