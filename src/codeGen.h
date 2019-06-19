@@ -13,8 +13,6 @@ using std::unique_ptr;
 using std::shared_ptr;
 using std::string;
 
-static LLVMContext llvmContext;
-
 class CodeGenBlock{
 public:
     BasicBlock * block;
