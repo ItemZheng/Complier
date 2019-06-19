@@ -5,12 +5,13 @@ LDFLAGS = `$(LLVMCONFIG) --ldflags` -lpthread -ldl -lz -lncurses -rdynamic
 LIBS = `$(LLVMCONFIG) --libs`
 
 Compiler: ./rule/parse.y ./rule/lexer.l ./node.cpp ./node.h \
-			./type.h ./error.h ./error.cpp ./symtab.h ./symtab.cpp
+			./type.h ./error.h ./error.cpp ./symtab.h ./symtab.cpp \
+			./codeGen.cpp ./codeGen.h
 	yacc -d -v ./rule/parse.y
 	flex ./rule/lexer.l
 	mv lex.yy.c lex.yy.cpp
 	mv y.tab.c y.tab.cpp
-	g++ error.cpp node.cpp symtab.cpp lex.yy.cpp y.tab.cpp \
+	g++ error.cpp node.cpp symtab.cpp lex.yy.cpp y.tab.cpp codeGen.cpp \
 		-o compiler $(CPPFLAGS) $(LIBS) $(LDFLAGS) -Wno-deprecated-register
 
 test: Compiler

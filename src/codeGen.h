@@ -49,7 +49,7 @@ public:
                 return (*it)->types[name];
             }
         }
-        return NULL
+        return NULL;
     }
 
 

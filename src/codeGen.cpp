@@ -6,15 +6,7 @@
 #include "node.h"
 #include "type.h"
 
-static Type *typeOf(const VarDeclNode& vardecl) 
-{
-    if(vardecl.type == ARRAY){
-        return PointerType::get(typeOf(vardecl.type_var), 0);
-    }
-    return typeOf(vardecl.type_var);
-}
-
-static Type*typeOf(type_var type){
+static Type* typeOf(type_var type){
     if(type == TYPE_INT){
         return Type::getInt32Ty(llvmContext);
     }
@@ -37,5 +29,13 @@ static Type*typeOf(type_var type){
         return Type::getVoidTy(llvmContext);
     }
     return NULL;
+}
+
+static Type *typeOf(const VarDeclNode& vardecl) 
+{
+    if(vardecl.type == ARRAY){
+        return PointerType::get(typeOf(vardecl.typeVar), 0);
+    }
+    return typeOf(vardecl.typeVar);
 }
 
