@@ -19,6 +19,8 @@ extern FILE *yyin;
 ProgramNode * root = NULL;
 SymbolTable * symTab = new SymbolTable();
 vector<Error*> errors = vector<Error*>();
+llvm::LLVMContext llvmContext;
+llvm::Module *theModule = new llvm::Module("Module", llvmContext);
 
 %}
 %union {

@@ -24,6 +24,8 @@ extern SymbolTable * symTab;
 extern char *yytext;
 extern int yylineno;
 extern vector<Error*> errors;
+extern llvm::LLVMContext llvmContext;
+extern llvm::Module *theModule;
 
 class Node {
 public:
@@ -39,7 +41,7 @@ public:
 public:
     virtual void visit() = 0;
 
-    virtual void codeGen() = 0;
+    virtual llvm::Value* codeGen() = 0;
 
     virtual void buildSymbolTable() = 0;
 
@@ -133,7 +135,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen();
 
     void buildSymbolTable();
 };
@@ -150,7 +152,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen();
 
     void buildSymbolTable();
 };
@@ -166,7 +168,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen();
 
     void buildSymbolTable();
 };
@@ -180,7 +182,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -195,7 +197,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -209,7 +211,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -222,7 +224,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -236,7 +238,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -249,7 +251,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -283,7 +285,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -296,7 +298,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -326,7 +328,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -342,7 +344,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -355,7 +357,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -371,7 +373,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -389,7 +391,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -403,7 +405,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -419,7 +421,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -435,7 +437,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -459,7 +461,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -475,7 +477,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -491,7 +493,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -508,7 +510,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -527,7 +529,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -544,7 +546,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -566,7 +568,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -584,7 +586,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -600,7 +602,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -616,7 +618,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -634,7 +636,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -650,7 +652,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -664,7 +666,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
@@ -684,7 +686,7 @@ public:
 
     void visit();
 
-    void codeGen() {}
+    llvm::Value* codeGen(){return NULL;}
 
     void buildSymbolTable();
 };
