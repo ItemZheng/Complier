@@ -578,15 +578,6 @@ void ProgramNode::buildSymbolTable() {
     }
 }
 
-llvm::Value* ProgramNode::codeGen() {
-    if (declaration_list != NULL) {
-        for (int i = 0; i < declaration_list->size(); i++) {
-            (*declaration_list)[i]->codeGen();
-        }
-    }
-    return NULL;
-}
-
 DeclarationNode::DeclarationNode(VarDeclarationNode *varDeclarationNode) {
     this->varDeclarationNode = varDeclarationNode;
     this->functionDeclarationNode = NULL;
@@ -607,15 +598,6 @@ void DeclarationNode::buildSymbolTable() {
     } else if (functionDeclarationNode != NULL) {
         functionDeclarationNode->buildSymbolTable();
     }
-}
-
-llvm::Value* DeclarationNode::codeGen() {
-    if(varDeclarationNode != NULL){
-        varDeclarationNode->codeGen();
-    } else if(functionDeclarationNode != NULL){
-        functionDeclarationNode->codeGen();
-    }
-    return NULL;
 }
 
 FunctionDeclarationNode::FunctionDeclarationNode(FunctionDeclNode *functionDeclNode) {
@@ -643,15 +625,6 @@ void FunctionDeclarationNode::visit() {
     if (functionDefinitionNode != NULL) {
         functionDefinitionNode->visit();
     }
-}
-
-llvm::Value* FunctionDeclarationNode::codeGen() {
-    if(functionDeclNode != NULL){
-        functionDeclNode->codeGen();
-    } else if(functionDefinitionNode != NULL){
-        functionDefinitionNode->codeGen();
-    }
-    return NULL;
 }
 
 DeclarationNode::DeclarationNode(FunctionDeclarationNode *functionDeclarationNode) {

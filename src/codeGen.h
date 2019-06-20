@@ -4,7 +4,7 @@
 
 #ifndef __CODEGEN_H__
 #define __CODEGEN_H__
-
+#define ISTYPE(value, id) (value->getType()->getTypeID() == id)
 #include"node.h"
 
 
@@ -19,6 +19,9 @@ public:
     Value * returnValue;
     std::map<string, Value*> locals;
     std::map<string, shared_ptr<VarDeclNode>> types;
+
+    BasicBlock * continueBlock = NULL;
+    BasicBlock * breakBlock = NULL;
 };
 
 class CodeGenContext{
@@ -52,6 +55,31 @@ public:
         return NULL;
     }
 
+    void setBreakBlock(BasicBlock * block){
+        blockStack.back()-> breakBlock = block;
+    }
+
+    void setContinueBlock(BasicBlock * block){
+        blockStack.back()-> continueBlock = block;
+    }
+
+    BasicBlock* breakBlock(){
+        for(auto it=blockStack.rbegin(); it!=blockStack.rend(); it++){
+            if( (*it)->breakBlock != NULL){
+                return (*it)->breakBlock;
+            }
+        }
+        return NULL;
+    }
+
+    BasicBlock* continueBlock(){
+        for(auto it=blockStack.rbegin(); it!=blockStack.rend(); it++){
+            if( (*it)->continueBlock != NULL){
+                return (*it)->continueBlock;
+            }
+        }
+        return NULL;
+    }
 
     void setSymbolValue(string name, Value* value){
         blockStack.back()->locals[name] = value;
@@ -87,6 +115,17 @@ public:
     }
 
 };
+
+static Value* CastToBoolean(CodeGenContext& context, Value* condValue){
+    if( ISTYPE(condValue, Type::IntegerTyID) ){
+        condValue = context.builder.CreateIntCast(condValue, Type::getInt1Ty(llvmContext), true);
+        return context.builder.CreateICmpNE(condValue, ConstantInt::get(Type::getInt1Ty(llvmContext), 0, true));
+    }else if( ISTYPE(condValue, Type::DoubleTyID) ){
+        return context.builder.CreateFCmpONE(condValue, ConstantFP::get(llvmContext, APFloat(0.0)));
+    }else{
+        return condValue;
+    }
+}
 
 Value* LogErrorV(const char* str);
 Value* LogErrorV(string str);
