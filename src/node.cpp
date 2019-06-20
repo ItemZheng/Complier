@@ -120,7 +120,7 @@ void VarDeclNode::buildSymbolTable() {
     } else {
         node = new SymbolNode(lineno, *(array_identifier->identifier), type, typeVar, symTab->getLevel());
     }
-    Error *err = symTab->sym_insert(node);
+    MyError *err = symTab->sym_insert(node);
     if (err != NULL) {
         err->Print();
         exit(1);
@@ -162,7 +162,7 @@ void ArrayAccessNode::visit() {
 void ArrayAccessNode::buildSymbolTable() {
     SymbolNode *node = symTab->sym_look_up(*identifier);
     if (node == NULL) {
-        Error *err = new Error(Error::ERROR_UNDECLARED, lineno, *identifier);
+        MyError *err = new MyError(MyError::ERROR_UNDECLARED, lineno, *identifier);
         err->Print();
         exit(1);
     }
@@ -241,7 +241,7 @@ void ExpressionVNode::buildSymbolTable() {
     if (var_list != NULL) {
         for (int j = 0; (j + 1) < var_list->size(); j++) {
             if(!typeEqual((*var_list)[j], (*var_list)[j + 1])){
-                Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
+                MyError *err = new MyError(MyError::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                 errors.push_back(err);
                 errorHandleBetweenTraversal();
             }
@@ -249,7 +249,7 @@ void ExpressionVNode::buildSymbolTable() {
         if (expression != NULL) {
             if (var_list->size() > 0) {
                 if (!typeEqual((*var_list)[0], expression)) {
-                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
+                    MyError *err = new MyError(MyError::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                     errors.push_back(err);
                     errorHandleBetweenTraversal();
                 }
@@ -287,7 +287,7 @@ void VarNode::buildSymbolTable() {
     if (type == SINGLE) {
         SymbolNode *node = symTab->sym_look_up(*identifier);
         if (node == NULL) {
-            Error *err = new Error(Error::ERROR_UNDECLARED, lineno, *identifier);
+            MyError *err = new MyError(MyError::ERROR_UNDECLARED, lineno, *identifier);
             err->Print();
             exit(1);
         }
@@ -468,7 +468,7 @@ void ExpressionNode::buildSymbolTable() {
                 right->buildSymbolTable();
             }
             if (!typeEqual(left, right)) {
-                Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
+                MyError *err = new MyError(MyError::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                 errors.push_back(err);
                 errorHandleBetweenTraversal();
             }
@@ -506,7 +506,7 @@ void ExpressionNode::buildSymbolTable() {
             if (var != NULL) {
                 var->buildSymbolTable();
                 if (var->nodeTypeIdentifier != SINGLE || var->nodeTypeVar != TYPE_INT) {
-                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
+                    MyError *err = new MyError(MyError::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                     errors.push_back(err);
                     errorHandleBetweenTraversal();
                 }
@@ -523,12 +523,12 @@ void ExpressionNode::buildSymbolTable() {
                 } else if(var->type == SINGLE){
                     node = symTab->sym_look_up(*(var->identifier));
                 } else {
-                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
+                    MyError *err = new MyError(MyError::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                     errors.push_back(err);
                     errorHandleBetweenTraversal();
                 }
                 if(node->typeIdentifier == FUNCTION){
-                    Error *err = new Error(Error::ERROR_TYPE_NOT_MATCH, lineno, string(""));
+                    MyError *err = new MyError(MyError::ERROR_TYPE_NOT_MATCH, lineno, string(""));
                     errors.push_back(err);
                     errorHandleBetweenTraversal();
                 }
@@ -654,7 +654,7 @@ void FunctionDefinitionNode::buildSymbolTable() {
                                       functionDeclNode->type,
                                       symTab->getLevel());
     node->func_type = SymbolNode::FUNC_DEFINE;
-    Error *err = symTab->sym_insert(node);
+    MyError *err = symTab->sym_insert(node);
     if (err != NULL) {
         err->Print();
         exit(1);
@@ -719,7 +719,7 @@ void FunctionDeclNode::buildSymbolTable() {
     SymbolNode *node = new SymbolNode(lineno, identifier, FUNCTION, type, symTab->getLevel());
     // todo add argument types
     node->func_type = SymbolNode::FUNC_DEC;
-    Error *err = symTab->sym_insert(node);
+    MyError *err = symTab->sym_insert(node);
     if (err != NULL) {
         err->Print();
         exit(1);
@@ -763,7 +763,7 @@ void FunctionArgNode::visit() {
 
 void FunctionArgNode::buildSymbolTable() {
     SymbolNode *node = new SymbolNode(lineno, identifier, SINGLE, type, symTab->getLevel());
-    Error *err = symTab->sym_insert(node);
+    MyError *err = symTab->sym_insert(node);
     if (err != NULL) {
         err->Print();
         exit(1);
@@ -1177,7 +1177,7 @@ void CallNode::buildSymbolTable() {
     if (identifier != NULL) {
         SymbolNode *node = symTab->sym_look_up(*identifier);
         if (node == NULL) {
-            Error *err = new Error(Error::ERROR_UNDECLARED_FUNCTION, lineno, *identifier);
+            MyError *err = new MyError(MyError::ERROR_UNDECLARED_FUNCTION, lineno, *identifier);
             err->Print();
             exit(1);
         }

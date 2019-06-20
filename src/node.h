@@ -15,6 +15,7 @@
 #include <llvm/IR/IRPrintingPasses.h>
 #include <llvm/Support/raw_ostream.h>
 
+
 #ifndef COMPILER_NODE_H
 #define COMPILER_NODE_H
 
@@ -23,7 +24,7 @@ using namespace std;
 extern SymbolTable * symTab;
 extern char *yytext;
 extern int yylineno;
-extern vector<Error*> errors;
+extern vector<MyError*> errors;
 extern llvm::LLVMContext llvmContext;
 class CodeGenContext;
 
@@ -437,7 +438,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext &context);
 
     void buildSymbolTable();
 };
@@ -461,7 +462,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext &context);
 
     void buildSymbolTable();
 };
@@ -493,7 +494,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext & context);
 
     void buildSymbolTable();
 };
@@ -529,7 +530,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext & context);
 
     void buildSymbolTable();
 };
@@ -546,7 +547,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext & context);
 
     void buildSymbolTable();
 };
@@ -568,7 +569,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext & context);
 
     void buildSymbolTable();
 };
@@ -586,7 +587,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext & context);
 
     void buildSymbolTable();
 };
@@ -602,7 +603,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext & context);
 
     void buildSymbolTable();
 };

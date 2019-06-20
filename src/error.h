@@ -11,7 +11,7 @@ using namespace std;
 #ifndef COMPILER_ERROR_H
 #define COMPILER_ERROR_H
 
-class Error {
+class MyError {
 public:
     static const int ERROR_SYNTAX = 0;
     static const int ERROR_REDEFINITION = 1;
@@ -25,9 +25,9 @@ public:
     int lineno;
     string near;
 public:
-    Error(int type, int lineno, char *near);
+    MyError(int type, int lineno, char *near);
 
-    Error(int type, int lineno, string near);
+    MyError(int type, int lineno, string near);
 
     void Print();
 

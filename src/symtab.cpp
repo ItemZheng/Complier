@@ -26,12 +26,12 @@ SymbolNode* SymbolTable::sym_look_up(string name) {
     return table[hashOf(name)];
 }
 
-Error* SymbolTable::sym_insert(SymbolNode *sym) {
+MyError* SymbolTable::sym_insert(SymbolNode *sym) {
     SymbolNode * node = sym_look_up(sym->name);
     // Variable
     if(sym->typeIdentifier != FUNCTION){
         if(node != NULL && node->level == sym->level){
-            return new Error(Error::ERROR_REDEFINITION, sym->lineno, sym->name);
+            return new MyError(MyError::ERROR_REDEFINITION, sym->lineno, sym->name);
         }
         // insert
         insert(sym);
@@ -47,13 +47,13 @@ Error* SymbolTable::sym_insert(SymbolNode *sym) {
             // 定义
             if(node != NULL){
                 if(node->typeIdentifier == FUNCTION && node->func_type == SymbolNode::FUNC_DEFINE){
-                    return new Error(Error::ERROR_REDEFINITION, sym->lineno, sym->name);
+                    return new MyError(MyError::ERROR_REDEFINITION, sym->lineno, sym->name);
                 } else if(node->typeIdentifier != FUNCTION){
-                    return new Error(Error::ERROR_REDEFINITION, sym->lineno, sym->name);
+                    return new MyError(MyError::ERROR_REDEFINITION, sym->lineno, sym->name);
                 }
             }
             if(node == NULL){
-                return new Error(Error::ERROR_UNKNOWN, sym->lineno, sym->name);
+                return new MyError(MyError::ERROR_UNKNOWN, sym->lineno, sym->name);
             } else{
                 node->func_type = SymbolNode::FUNC_DEFINE;
             }

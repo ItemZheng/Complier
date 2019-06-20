@@ -12,13 +12,15 @@ using namespace llvm;
 using std::unique_ptr;
 using std::shared_ptr;
 using std::string;
+using legacy::PassManager;
 
 class CodeGenBlock{
 public:
     BasicBlock * block;
     Value * returnValue;
     std::map<string, Value*> locals;
-    std::map<string, shared_ptr<VarDeclNode>> types;
+    std::map<string, VarDeclNode*> types;
+    std::map<string, uint64_t> arraySize;
 
     BasicBlock * continueBlock = NULL;
     BasicBlock * breakBlock = NULL;
@@ -46,7 +48,7 @@ public:
         return NULL;
     }
 
-    shared_ptr<VarDeclNode> getSymbolType(string name) const{
+    VarDeclNode* getSymbolType(string name) const{
         for(auto it=blockStack.rbegin(); it!=blockStack.rend(); it++){
             if( (*it)->types.find(name) != (*it)->types.end() ){
                 return (*it)->types[name];
@@ -85,7 +87,7 @@ public:
         blockStack.back()->locals[name] = value;
     }
 
-    void setSymbolType(string name, shared_ptr<VarDeclNode> value){
+    void setSymbolType(string name, VarDeclNode *value){
         blockStack.back()->types[name] = value;
     }
 
@@ -113,6 +115,21 @@ public:
     Value* getCurrentReturnValue(){
         return blockStack.back()->returnValue;
     }
+
+    void setArraySize(string name, uint64_t value){
+        blockStack.back()->arraySize[name] = value;
+   }
+
+    uint64_t getArraySize(string name){
+        for(auto it=blockStack.rbegin(); it!=blockStack.rend(); it++){
+            if( (*it)->arraySize.find(name) != (*it)->arraySize.end() ){
+                return (*it)->arraySize[name];
+            }
+        }
+        return blockStack.back()->arraySize[name];
+    }
+
+    void generateCode(ProgramNode& root);
 
 };
 

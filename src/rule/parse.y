@@ -1,5 +1,6 @@
 %{
 #include "node.h"
+#include "codeGen.h"
 #include "error.h"
 #include "symtab.h"
 #include <math.h>
@@ -18,7 +19,7 @@ extern FILE *yyin;
 
 ProgramNode * root = NULL;
 SymbolTable * symTab = new SymbolTable();
-vector<Error*> errors = vector<Error*>();
+vector<MyError*> errors = vector<MyError*>();
 llvm::LLVMContext llvmContext;
 
 %}
@@ -584,7 +585,7 @@ labeledStatement :
 int yyerror(char const *str)
 {
     extern char *yytext;
-    Error* err = new Error(Error::ERROR_SYNTAX, yylineno, yytext);
+    MyError* err = new MyError(MyError::ERROR_SYNTAX, yylineno, yytext);
     err->Print();
     return 0;
 }
@@ -605,12 +606,15 @@ int main(int argv, char **argc)
     	cout << "Cannot open file: " << string(argc[0]) << endl;
 	exit(1);
     }
-    Error::setCurrentFile(string(argc[1]));
+    MyError::setCurrentFile(string(argc[1]));
     yyin = fp;
     if (yyparse()) {
         exit(1);
     }
 
     root->buildSymbolTable();
+
+    CodeGenContext context;
+    context.generateCode(*root);
     // root->visit();
 }

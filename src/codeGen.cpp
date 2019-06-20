@@ -6,40 +6,39 @@
 #include "node.h"
 #include "type.h"
 
-static Type* typeOf(type_var type){
-    if(type == TYPE_INT){
+static Type *typeOf(type_var type) {
+    if (type == TYPE_INT) {
         return Type::getInt32Ty(llvmContext);
     }
-    if(type == TYPE_LONG){
+    if (type == TYPE_LONG) {
         return Type::getInt64Ty(llvmContext);
     }
-    if(type == TYPE_SHORT){
+    if (type == TYPE_SHORT) {
         return Type::getInt16Ty(llvmContext);
     }
-    if(type == TYPE_DOUBLE){
+    if (type == TYPE_DOUBLE) {
         return Type::getDoubleTy(llvmContext);
     }
-    if(type == TYPE_FLOAT){
+    if (type == TYPE_FLOAT) {
         return Type::getFloatTy(llvmContext);
     }
-    if(type == TYPE_CHAR){
+    if (type == TYPE_CHAR) {
         return Type::getInt8Ty(llvmContext);
     }
-    if(type == TYPE_VOID){
+    if (type == TYPE_VOID) {
         return Type::getVoidTy(llvmContext);
     }
     return NULL;
 }
 
-static Type *typeOf(const VarDeclNode& vardecl) 
-{
-    if(vardecl.type == ARRAY){
+static Type *typeOf(const VarDeclNode &vardecl) {
+    if (vardecl.type == ARRAY) {
         return PointerType::get(typeOf(vardecl.typeVar), 0);
     }
     return typeOf(vardecl.typeVar);
 }
 
-llvm::Value* ProgramNode::codeGen(CodeGenContext &context) {
+llvm::Value *ProgramNode::codeGen(CodeGenContext &context) {
     if (declaration_list != NULL) {
         for (int i = 0; i < declaration_list->size(); i++) {
             (*declaration_list)[i]->codeGen(context);
@@ -48,52 +47,53 @@ llvm::Value* ProgramNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* DeclarationNode::codeGen(CodeGenContext &context) {
-    if(varDeclarationNode != NULL){
+llvm::Value *DeclarationNode::codeGen(CodeGenContext &context) {
+    if (varDeclarationNode != NULL) {
         varDeclarationNode->codeGen(context);
-    } else if(functionDeclarationNode != NULL){
+    } else if (functionDeclarationNode != NULL) {
         functionDeclarationNode->codeGen(context);
     }
     return NULL;
 }
 
-llvm::Value* FunctionDeclarationNode::codeGen(CodeGenContext &context) {
-    if(functionDeclNode != NULL){
+llvm::Value *FunctionDeclarationNode::codeGen(CodeGenContext &context) {
+    if (functionDeclNode != NULL) {
         functionDeclNode->codeGen(context);
-    } else if(functionDefinitionNode != NULL){
+    } else if (functionDefinitionNode != NULL) {
         functionDefinitionNode->codeGen(context);
     }
     return NULL;
 }
 
-llvm::Value* FunctionDeclNode::codeGen(CodeGenContext &context) {
-    vector<llvm::Type*> args;
-    if(function_args != NULL){
-        for(int i = 0; i < function_args->size(); i++){
+llvm::Value *FunctionDeclNode::codeGen(CodeGenContext &context) {
+    vector<llvm::Type *> args;
+    if (function_args != NULL) {
+        for (int i = 0; i < function_args->size(); i++) {
             args.push_back(typeOf((*function_args)[i]->type));
         }
     }
     FunctionType *functionType = FunctionType::get(typeOf(type), args, false);
     Function *F = Function::Create(functionType, GlobalValue::ExternalLinkage, identifier, context.theModule.get());
-    if( F->getName() != identifier ) {
+    if (F->getName() != identifier) {
         F->eraseFromParent();
         F = context.theModule->getFunction(identifier);
     }
 
     // set identifier name
     int Idx = 0;
-    for (Function::arg_iterator AI = F->arg_begin(); Idx != function_args->size(); ++AI, ++Idx)
-        AI->setName((*function_args)[Idx]->identifier);
+    if(function_args != NULL)
+        for (Function::arg_iterator AI = F->arg_begin(); Idx != function_args->size(); ++AI, ++Idx)
+            AI->setName((*function_args)[Idx]->identifier);
     return NULL;
 }
 
-llvm::Value* FunctionDefinitionNode::codeGen(CodeGenContext &context) {
-    if(functionDeclNode != NULL){
+llvm::Value *FunctionDefinitionNode::codeGen(CodeGenContext &context) {
+    if (functionDeclNode != NULL) {
         functionDeclNode->codeGen(context);
     }
     Function *F = context.theModule->getFunction(functionDeclNode->identifier);
     // already define
-    if(!F->empty()){
+    if (!F->empty()) {
         return NULL;
     }
 
@@ -102,15 +102,15 @@ llvm::Value* FunctionDefinitionNode::codeGen(CodeGenContext &context) {
     context.builder.SetInsertPoint(block); // insert instruction to end of block
     context.pushBlock(block);
     // register name values to symbol table
-    if(functionDeclNode != NULL && functionDeclNode->function_args != NULL){
+    if (functionDeclNode != NULL && functionDeclNode->function_args != NULL) {
         int Idx = 0;
-        for (Function::arg_iterator AI = F->arg_begin(); Idx != functionDeclNode->function_args->size(); ++AI, ++Idx){
+        for (Function::arg_iterator AI = F->arg_begin(); Idx != functionDeclNode->function_args->size(); ++AI, ++Idx) {
             context.setSymbolValue((*(functionDeclNode->function_args))[Idx]->identifier, AI);
         }
     }
 
     // code generete body
-    if(functionBodyNode != NULL){
+    if (functionBodyNode != NULL) {
         Value *ret = functionBodyNode->codeGen(context);
         context.builder.CreateRet(ret);
     }
@@ -118,27 +118,27 @@ llvm::Value* FunctionDefinitionNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* FunctionBodyNode::codeGen(CodeGenContext &context) {
-    if(functionStatementsNode != NULL){
+llvm::Value *FunctionBodyNode::codeGen(CodeGenContext &context) {
+    if (functionStatementsNode != NULL) {
         return functionStatementsNode->codeGen(context);
     }
     return NULL;
 }
 
-llvm::Value* FunctionStatementsNode::codeGen(CodeGenContext &context) {
-    if(statements != NULL){
-        for(int i = 0; i < statements->size(); i++){
+llvm::Value *FunctionStatementsNode::codeGen(CodeGenContext &context) {
+    if (statements != NULL) {
+        for (int i = 0; i < statements->size(); i++) {
             (*statements)[i]->codeGen(context);
         }
     }
-    if(returnStatementNode != NULL){
+    if (returnStatementNode != NULL) {
         return returnStatementNode->codeGen(context);
     }
     return NULL;
 }
 
-llvm::Value* ReturnStatementNode::codeGen(CodeGenContext &context) {
-    if(expressionVNode != NULL){
+llvm::Value *ReturnStatementNode::codeGen(CodeGenContext &context) {
+    if (expressionVNode != NULL) {
         Value *ret = expressionVNode->codeGen(context);
         context.setCurrentReturnValue(ret);
         return ret;
@@ -146,30 +146,30 @@ llvm::Value* ReturnStatementNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* StatementNode::codeGen(CodeGenContext &context) {
-    switch (type){
+llvm::Value *StatementNode::codeGen(CodeGenContext &context) {
+    switch (type) {
         case TYPE_VAR_DECLARATION:
-            if(varDeclarationNode != NULL){
+            if (varDeclarationNode != NULL) {
                 varDeclarationNode->codeGen(context);
             }
             break;
         case TYPE_ITERATION:
-            if(iterationStatementNode != NULL){
+            if (iterationStatementNode != NULL) {
                 iterationStatementNode->codeGen(context);
             }
             break;
         case TYPE_SELECTION:
-            if(selectionStatementNode != NULL){
+            if (selectionStatementNode != NULL) {
                 selectionStatementNode->codeGen(context);
             }
             break;
         case TYPE_EXPRESSION:
-            if(expressionStatementNode != NULL){
+            if (expressionStatementNode != NULL) {
                 expressionStatementNode->codeGen(context);
             }
             break;
         case TYPE_JUMP:
-            if(jumpStatementNode != NULL){
+            if (jumpStatementNode != NULL) {
                 jumpStatementNode->codeGen(context);
             }
             break;
@@ -179,23 +179,23 @@ llvm::Value* StatementNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* ExpressionStatementNode::codeGen(CodeGenContext &context) {
-    if(expressionVNode != NULL){
+llvm::Value *ExpressionStatementNode::codeGen(CodeGenContext &context) {
+    if (expressionVNode != NULL) {
         return expressionVNode->codeGen(context);
     }
     return NULL;
 }
 
-llvm::Value* IterationStatementNode::codeGen(CodeGenContext &context) {
-    Function* theFunction = context.builder.GetInsertBlock()->getParent();
+llvm::Value *IterationStatementNode::codeGen(CodeGenContext &context) {
+    Function *theFunction = context.builder.GetInsertBlock()->getParent();
     // 2 basic block
     BasicBlock *block = BasicBlock::Create(llvmContext, "forloop", theFunction);
     BasicBlock *after = BasicBlock::Create(llvmContext, "forcont");
 
     if (type == TYPE_WHILE || type == TYPE_DO_WHILE) {
-        if(type == TYPE_WHILE ){
+        if (type == TYPE_WHILE) {
             // compute value
-            Value* condValue = expressionVNode->codeGen(context);
+            Value *condValue = expressionVNode->codeGen(context);
             condValue = CastToBoolean(context, condValue);
             context.builder.CreateCondBr(condValue, block, after);
         }
@@ -207,9 +207,9 @@ llvm::Value* IterationStatementNode::codeGen(CodeGenContext &context) {
         context.setBreakBlock(after);
         context.setContinueBlock(block);
 
-        if(loopBodyNode != NULL){
+        if (loopBodyNode != NULL) {
             loopBodyNode->codeGen(context);
-        } else if(compoundStatementNode != NULL){
+        } else if (compoundStatementNode != NULL) {
             compoundStatementNode->codeGen(context);
         }
 
@@ -217,7 +217,7 @@ llvm::Value* IterationStatementNode::codeGen(CodeGenContext &context) {
         context.popBlock();
 
         // execute the again or stop
-        Value* condValue = expressionVNode->codeGen(context);
+        Value *condValue = expressionVNode->codeGen(context);
         condValue = CastToBoolean(context, condValue);
         context.builder.CreateCondBr(condValue, block, after);
 
@@ -229,19 +229,19 @@ llvm::Value* IterationStatementNode::codeGen(CodeGenContext &context) {
         ForInitListNode *forInitListNode = forConditionNode->forInitListNode;
         ExpressionVNode *forExpression = forConditionNode->forExpression;
         vector<ExpressionVNode *> *incrementExpressionList = forConditionNode->incrementExpressionList;
-        if(forInitListNode != NULL){
+        if (forInitListNode != NULL) {
             forInitListNode->codeGen(context);
         }
 
         // Compute Condition
-        Value* condValue;
-        if(forExpression == NULL){
+        Value *condValue;
+        if (forExpression == NULL) {
             // 表达式为真
             condValue = ConstantFP::get(llvmContext, APFloat(1.0));
         } else {
             condValue = forExpression->codeGen(context);
         }
-        if(!condValue){
+        if (!condValue) {
             // error
             return NULL;
         }
@@ -257,19 +257,19 @@ llvm::Value* IterationStatementNode::codeGen(CodeGenContext &context) {
         context.builder.SetInsertPoint(block);
 
         // codeGen
-        if(loopBodyNode != NULL){
+        if (loopBodyNode != NULL) {
             loopBodyNode->codeGen(context);
         }
 
         // do increment
-        if(incrementExpressionList != NULL){
-            for(int i = 0; i < incrementExpressionList->size(); i++){
+        if (incrementExpressionList != NULL) {
+            for (int i = 0; i < incrementExpressionList->size(); i++) {
                 (*incrementExpressionList)[i]->codeGen(context);
             }
         }
 
         // compute value
-        if(forExpression == NULL){
+        if (forExpression == NULL) {
             // 表达式为真
             condValue = ConstantFP::get(llvmContext, APFloat(1.0));
         } else {
@@ -287,24 +287,24 @@ llvm::Value* IterationStatementNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* ForConditionNode::codeGen(CodeGenContext &context) {
+llvm::Value *ForConditionNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* LoopBodyNode::codeGen(CodeGenContext &context) {
-    if(statementNode != NULL){
+llvm::Value *LoopBodyNode::codeGen(CodeGenContext &context) {
+    if (statementNode != NULL) {
         return statementNode->codeGen(context);
     }
-    if(compoundStatementNode != NULL){
+    if (compoundStatementNode != NULL) {
         return compoundStatementNode->codeGen(context);
     }
     return NULL;
 }
 
-llvm::Value* CompoundStatementNode::codeGen(CodeGenContext &context) {
+llvm::Value *CompoundStatementNode::codeGen(CodeGenContext &context) {
     context.pushBlock(NULL);
-    if(statements != NULL){
-        for(int i = 0; i < statements->size(); i++){
+    if (statements != NULL) {
+        for (int i = 0; i < statements->size(); i++) {
             (*statements)[i]->codeGen(context);
         }
     }
@@ -313,19 +313,19 @@ llvm::Value* CompoundStatementNode::codeGen(CodeGenContext &context) {
 }
 
 
-llvm::Value* ForInitListNode::codeGen(CodeGenContext &context) {
-    if(forDeclarationNode != NULL){
+llvm::Value *ForInitListNode::codeGen(CodeGenContext &context) {
+    if (forDeclarationNode != NULL) {
         forDeclarationNode->codeGen(context);
     }
-    if(expressionList != NULL){
-        for(int i = 0; i < expressionList->size(); i++){
+    if (expressionList != NULL) {
+        for (int i = 0; i < expressionList->size(); i++) {
             (*expressionList)[i]->codeGen(context);
         }
     }
     return NULL;
 }
 
-llvm::Value* ForDeclarationNode::codeGen(CodeGenContext &context) {
+llvm::Value *ForDeclarationNode::codeGen(CodeGenContext &context) {
     if (varDeclarationList != NULL) {
         for (int i = 0; i < varDeclarationList->size(); i++) {
             VarDeclNode *varDeclNode = (*varDeclarationList)[i];
@@ -335,31 +335,208 @@ llvm::Value* ForDeclarationNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* JumpStatementNode::codeGen(CodeGenContext &context) {
+llvm::Value *JumpStatementNode::codeGen(CodeGenContext &context) {
     BasicBlock *block;
-    if(type == TYPE_CONTINUE){
+    if (type == TYPE_CONTINUE) {
         block = context.continueBlock();
-    } else{
+    } else {
         block = context.breakBlock();
     }
-    if(block != NULL){
+    if (block != NULL) {
         context.builder.CreateBr(block);
     }
     return NULL;
 }
 
-llvm::Value* SelectionStatementNode::codeGen(CodeGenContext &context) {
-    if(ifStatementNode != NULL){
+llvm::Value *SelectionStatementNode::codeGen(CodeGenContext &context) {
+    if (ifStatementNode != NULL) {
         ifStatementNode->codeGen(context);
     }
-    if(switchStatementNode != NULL){
+    if (switchStatementNode != NULL) {
         switchStatementNode->codeGen(context);
     }
     return NULL;
 }
 
-llvm::Value* IfStatementNode::codeGen(CodeGenContext &context) {
-    Function* theFunction = context.builder.GetInsertBlock()->getParent();      // the function where if statement is in
+Value *VarDeclarationNode::codeGen(CodeGenContext &context) {
+    int size = var_declaration_list->size();
+    Value *last = NULL;
+    for (int i = 0; i < size; i++) {
+        last = (*var_declaration_list)[i]->codeGen(context);
+    }
+    return last;
+}
+
+Value *VarDeclNode::codeGen(CodeGenContext &context) {
+    Value *inst = NULL;
+    if (type == SINGLE) {
+        //cout << "Generating variable declaration of " << typeVar << " " << *identifier << std::endl;
+        Type *llvmtype = typeOf(*this);
+        inst = context.builder.CreateAlloca(llvmtype);
+        context.setSymbolValue(*identifier, inst);
+        context.setSymbolType(*identifier, this);
+        if (assign == 1) {
+            Value *exp = expressionv->codeGen(context);
+            context.builder.CreateStore(exp, inst);
+        }
+    } else {
+        //cout << "Generating array declaration of " << typeVar << " " << *(array_identifier->identifier) << std::endl;
+        uint32_t array_size = array_identifier->size;
+        context.setArraySize(*(array_identifier->identifier), array_size);
+        Value *arraySizeValue = ConstantInt::get(Type::getInt32Ty(llvmContext), array_size, true);
+        auto arrayType = ArrayType::get(typeOf(*this), array_size);
+        inst = context.builder.CreateAlloca(arrayType, arraySizeValue, "arraytmp");
+        context.setSymbolValue(*(array_identifier->identifier), inst);
+        context.setSymbolType(*(array_identifier->identifier), this);
+        if (assign == 1) {
+            if (array_size != this->array_init->expressionvs->size()) {
+                return LogErrorV("Initialize size not match");
+            }
+            int i = 0;
+            for (auto it = this->array_init->expressionvs->begin();
+                 it != this->array_init->expressionvs->end(); it++, i++) {
+                Value *tempvalue = (*it)->codeGen(context);
+                auto arrayPtr = context.builder.CreateLoad(inst, "arrayPtr");
+                if (!arrayPtr->getType()->isArrayTy() && !arrayPtr->getType()->isPointerTy()) {
+                    return LogErrorV("The variable is not array");
+                }
+                Value *array_index = ConstantInt::get(Type::getInt32Ty(llvmContext), i, true);
+                ArrayRef<Value *> gep2_array{ConstantInt::get(Type::getInt32Ty(llvmContext), 0), array_index};
+                auto ptr = context.builder.CreateInBoundsGEP(inst, gep2_array, "elementPtr");
+                context.builder.CreateAlignedStore(tempvalue, ptr, 4);
+            }
+        }
+    }
+    return inst;
+}
+
+Value *ExpressionVNode::codeGen(CodeGenContext &context) {
+    Value *exp = expression->codeGen(context);
+    Value *last = NULL;
+    if (var_list != NULL) {
+        for (auto it = var_list->rbegin(); it != var_list->rend(); it++) {
+            type_identifier temptype = (*it)->type;
+            if (temptype == SINGLE) {
+                Value *dst = context.getSymbolValue(*((*it)->identifier));
+                auto dstType = context.getSymbolType(*((*it)->identifier));
+                if (!dst) {
+                    return LogErrorV("Undeclared variable");
+                }
+                last = context.builder.CreateStore(exp, dst);
+            }
+            if (temptype == ARRAY) {
+                auto varPtr = context.getSymbolValue(*((*it)->array_access->identifier));
+                if (varPtr == NULL) {
+                    return LogErrorV("Unknown variable name");
+                }
+                auto arrayPtr = context.builder.CreateLoad(varPtr, "arrayPtr");
+                if (!arrayPtr->getType()->isArrayTy() && !arrayPtr->getType()->isPointerTy()) {
+                    return LogErrorV("The variable is not array");
+                }
+                Value *array_index = ConstantInt::get(Type::getInt32Ty(llvmContext), uint64_t(index), true);
+                ArrayRef<Value *> gep2_array{ConstantInt::get(Type::getInt32Ty(llvmContext), 0), array_index};
+                auto ptr = context.builder.CreateInBoundsGEP(varPtr, gep2_array, "elementPtr");
+                last = context.builder.CreateAlignedStore(exp, ptr, 4);
+            }
+        }
+    }
+    return exp;
+}
+
+Value *ExpressionNode::codeGen(CodeGenContext &context) {
+    if (type == EXP_PLUS || type == EXP_MINUS || type == EXP_MUL || type == EXP_DIV ||
+        type == EXP_MOD || type == EXP_LESS || type == EXP_LESS_EQUAL || type == EXP_GREATER ||
+        type == EXP_GREATER_EQUAL || type == EXP_AND_AND || type == EXP_OR_OR || type == EXP_EQUAL ||
+        type == EXP_NOT_EQUAL) {
+        Value *L = left->codeGen(context);
+        Value *R = right->codeGen(context);
+        bool fp = false;
+        if ((L->getType()->getTypeID() == Type::DoubleTyID) || (R->getType()->getTypeID() == Type::DoubleTyID)) {
+            fp = true;
+            if ((R->getType()->getTypeID() != Type::DoubleTyID)) {
+                R = context.builder.CreateUIToFP(R, Type::getDoubleTy(llvmContext), "ftmp");
+            }
+            if ((L->getType()->getTypeID() != Type::DoubleTyID)) {
+                L = context.builder.CreateUIToFP(L, Type::getDoubleTy(llvmContext), "ftmp");
+            }
+        }
+        if (!L || !R) {
+            return NULL;
+        }
+        switch (type) {
+            case EXP_PLUS:
+                return fp ? context.builder.CreateFAdd(L, R, "addftmp") : context.builder.CreateAdd(L, R, "addtmp");
+            case EXP_MINUS:
+                return fp ? context.builder.CreateFSub(L, R, "subftmp") : context.builder.CreateSub(L, R, "subtmp");
+            case EXP_MUL:
+                return fp ? context.builder.CreateFMul(L, R, "mulftmp") : context.builder.CreateMul(L, R, "multmp");
+            case EXP_DIV:
+                return fp ? context.builder.CreateFDiv(L, R, "divftmp") : context.builder.CreateSDiv(L, R, "divtmp");
+            case EXP_LESS:
+                return fp ? context.builder.CreateFCmpULT(L, R, "cmpftmp") : context.builder.CreateICmpULT(L, R,
+                                                                                                           "cmptmp");
+            case EXP_LESS_EQUAL:
+                return fp ? context.builder.CreateFCmpOLE(L, R, "cmpftmp") : context.builder.CreateICmpSLE(L, R,
+                                                                                                           "cmptmp");
+            case EXP_GREATER_EQUAL:
+                return fp ? context.builder.CreateFCmpOGE(L, R, "cmpftmp") : context.builder.CreateICmpSGE(L, R,
+                                                                                                           "cmptmp");
+            case EXP_GREATER:
+                return fp ? context.builder.CreateFCmpOGT(L, R, "cmpftmp") : context.builder.CreateICmpSGT(L, R,
+                                                                                                           "cmptmp");
+            case EXP_EQUAL:
+                return fp ? context.builder.CreateFCmpOEQ(L, R, "cmpftmp") : context.builder.CreateICmpEQ(L, R,
+                                                                                                          "cmptmp");
+            case EXP_NOT_EQUAL:
+                return fp ? context.builder.CreateFCmpONE(L, R, "cmpftmp") : context.builder.CreateICmpNE(L, R,
+                                                                                                          "cmptmp");
+            default:
+                return LogErrorV("Unknown binary operator");
+        }
+    }
+    if (type == EXP_NOT) {
+        Value *L = left->codeGen(context);
+        if (!L) {
+            return NULL;
+        }
+        return context.builder.CreateNot(L, "nottmp");
+    }
+    if (type == EXP_MINUS_SIGN) {
+        Value *L = left->codeGen(context);
+        if (!L) {
+            return NULL;
+        }
+        return context.builder.CreateNeg(L, "negtmp");
+    }
+    if (type == EXP_VAR) {
+        return var->codeGen(context);
+    }
+    if (type == EXP_CONST) {
+        return constant->codeGen(context);
+    }
+    if (type == EXP_EXPV) {
+        return expressionv->codeGen(context);
+    }
+    if (type == EXP_CALL) {
+        return call->codeGen(context);
+    }
+    return NULL;
+}
+
+Value *VarNode::codeGen(CodeGenContext &context) {
+    if (type == SINGLE) {
+        Value *value = context.getSymbolValue(*identifier);
+        if (!value) {
+            return LogErrorV("Unknown variable name " + *identifier);
+        }
+        return context.builder.CreateLoad(value, false, "");
+    } else {
+        return array_access->codeGen(context);
+    }
+}
+
+llvm::Value *IfStatementNode::codeGen(CodeGenContext &context) {
+    Function *theFunction = context.builder.GetInsertBlock()->getParent();      // the function where if statement is in
 
     // 3 basic block
     BasicBlock *ifBodyBB = BasicBlock::Create(llvmContext, "then", theFunction);
@@ -367,13 +544,13 @@ llvm::Value* IfStatementNode::codeGen(CodeGenContext &context) {
     BasicBlock *endBB = BasicBlock::Create(llvmContext, "ifcont");
 
     // compute value
-    Value* condValue = expressionVNode->codeGen(context);
+    Value *condValue = expressionVNode->codeGen(context);
     condValue = CastToBoolean(context, condValue);
 
     // if has else
-    if( elseBodyNode != NULL ){
+    if (elseBodyNode != NULL) {
         context.builder.CreateCondBr(condValue, ifBodyBB, elseBody);
-    } else{
+    } else {
         context.builder.CreateCondBr(condValue, ifBodyBB, endBB);
     }
 
@@ -390,7 +567,7 @@ llvm::Value* IfStatementNode::codeGen(CodeGenContext &context) {
 //    }
 
     // begin elseBody
-    if(elseBodyNode != NULL){
+    if (elseBodyNode != NULL) {
         theFunction->getBasicBlockList().push_back(elseBody);
         context.builder.SetInsertPoint(elseBody);
         elseBodyNode->codeGen(context);
@@ -402,40 +579,50 @@ llvm::Value* IfStatementNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* IfBodyNode::codeGen(CodeGenContext &context) {
-    if(statementNode != NULL){
+llvm::Value *IfBodyNode::codeGen(CodeGenContext &context) {
+    if (statementNode != NULL) {
         return statementNode->codeGen(context);
     }
-    if(compoundStatementNode != NULL){
+    if (compoundStatementNode != NULL) {
         return compoundStatementNode->codeGen(context);
     }
     return NULL;
 }
 
-llvm::Value* SwitchStatementNode::codeGen(CodeGenContext &context) {
+llvm::Value *SwitchStatementNode::codeGen(CodeGenContext &context) {
     // get function
-    Function* theFunction = context.builder.GetInsertBlock()->getParent();      // the function where if statement is in
+    Function *theFunction = context.builder.GetInsertBlock()->getParent();      // the function where if statement is in
     BasicBlock *end = BasicBlock::Create(llvmContext, "switchEnd");
 
     // computer value
-    Value * value = expressionVNode->codeGen(context);
+    Value *L = expressionVNode->codeGen(context);
     context.pushBlock(NULL);
     context.setBreakBlock(end);
 
     // 迭代过程需要用到的2 个 basic block
-    BasicBlock* matchBB = BasicBlock::Create(llvmContext, "caseMatch");
-    BasicBlock* unmatchBB = BasicBlock::Create(llvmContext, "caseUnMatch");
+    BasicBlock *matchBB = BasicBlock::Create(llvmContext, "caseMatch");
+    BasicBlock *unmatchBB = BasicBlock::Create(llvmContext, "caseUnMatch");
     LabeledStatementNode *defaultLabel = NULL;
 
-    if(labeledStatementList != NULL){
-        for(int i = 0; i < labeledStatementList->size(); i++){
+    if (labeledStatementList != NULL) {
+        for (int i = 0; i < labeledStatementList->size(); i++) {
             LabeledStatementNode *labeledStatementNode = (*labeledStatementList)[i];
 
             // if not default
-            if(labeledStatementNode->type != LabeledStatementNode::TYPE_DEFAULT){
+            if (labeledStatementNode->type != LabeledStatementNode::TYPE_DEFAULT) {
                 // 比较值
-                // todo
-                Value *result = NULL;
+                Value* R = labeledStatementNode->constantNode->codeGen(context);
+                bool fp = false;
+                if ((L->getType()->getTypeID() == Type::DoubleTyID) || (R->getType()->getTypeID() == Type::DoubleTyID)) {
+                    fp = true;
+                    if ((R->getType()->getTypeID() != Type::DoubleTyID)) {
+                        R = context.builder.CreateUIToFP(R, Type::getDoubleTy(llvmContext), "ftmp");
+                    }
+                    if ((L->getType()->getTypeID() != Type::DoubleTyID)) {
+                        L = context.builder.CreateUIToFP(L, Type::getDoubleTy(llvmContext), "ftmp");
+                    }
+                }
+                Value *result = fp ? context.builder.CreateFCmpOEQ(L, R, "cmpftmp") : context.builder.CreateICmpEQ(L, R, "cmptmp");;
                 result = CastToBoolean(context, result);
                 context.builder.CreateCondBr(result, matchBB, unmatchBB);
             } else {
@@ -449,7 +636,7 @@ llvm::Value* SwitchStatementNode::codeGen(CodeGenContext &context) {
             context.builder.SetInsertPoint(matchBB);
 
             labeledStatementNode->codeGen(context);
-            BasicBlock* nextMatch = BasicBlock::Create(llvmContext, "caseMatch");
+            BasicBlock *nextMatch = BasicBlock::Create(llvmContext, "caseMatch");
             context.builder.CreateBr(nextMatch);
 
             // unmatch
@@ -461,17 +648,15 @@ llvm::Value* SwitchStatementNode::codeGen(CodeGenContext &context) {
         }
     }
 
+    // unmatch: go default
+    if (defaultLabel != NULL) {
+        defaultLabel->codeGen(context);
+    }
+    context.builder.CreateBr(end);
+
     // end
     theFunction->getBasicBlockList().push_back(matchBB);
     context.builder.SetInsertPoint(matchBB);
-    context.builder.CreateBr(end);
-
-    // unmatch: go default
-    theFunction->getBasicBlockList().push_back(unmatchBB);
-    context.builder.SetInsertPoint(unmatchBB);
-    if(defaultLabel != NULL){
-        defaultLabel->codeGen(context);
-    }
     context.builder.CreateBr(end);
 
     context.popBlock();
@@ -482,11 +667,85 @@ llvm::Value* SwitchStatementNode::codeGen(CodeGenContext &context) {
     return NULL;
 }
 
-llvm::Value* LabeledStatementNode ::codeGen(CodeGenContext &context) {
-    if(statements != NULL){
-        for(int i = 0; i < statements->size(); i++){
+llvm::Value *LabeledStatementNode::codeGen(CodeGenContext &context) {
+    if (statements != NULL) {
+        for (int i = 0; i < statements->size(); i++) {
             (*statements)[i]->codeGen(context);
         }
     }
+    return NULL;
+}
+
+Value *ArrayAccessNode::codeGen(CodeGenContext &context) {
+    auto varPtr = context.getSymbolValue(*identifier);
+    auto type = context.getSymbolType(*identifier);
+    uint32_t size = context.getArraySize(*identifier);
+    if (size <= index) {
+        return LogErrorV("out of range");
+    }
+    if (!varPtr) {
+        return LogErrorV("Unknown variable name " + *identifier);
+    }
+    Value *array_index = ConstantInt::get(Type::getInt32Ty(llvmContext), index, true);
+    ArrayRef<Value *> indices;
+    indices = {ConstantInt::get(Type::getInt32Ty(llvmContext), 0), array_index};
+    auto ptr = context.builder.CreateInBoundsGEP(varPtr, indices, "elementPtr");
+    return context.builder.CreateAlignedLoad(ptr, 4);
+}
+
+Value *ConstantNode::codeGen(CodeGenContext &context) {
+    if (type == TYPE_INT) {
+        return ConstantInt::get(Type::getInt32Ty(llvmContext), integer, true);
+    } else if (type == TYPE_DOUBLE) {
+        return ConstantFP::get(Type::getDoubleTy(llvmContext), double_number);
+    } else if (type == TYPE_CHAR) {
+        return ConstantInt::get(Type::getInt8Ty(llvmContext), character, true);
+    }
+    return NULL;
+}
+
+Value *CallNode::codeGen(CodeGenContext &context) {
+    Function *calleeF = context.theModule->getFunction(*identifier);
+    if (!calleeF) {
+        LogErrorV("Function name not found");
+    }
+    if (calleeF->arg_size() != args->size()) {
+        LogErrorV(
+                "Function arguments size not match, calleeF=" + std::to_string(calleeF->size()) + ", this->arguments=" +
+                std::to_string(args->size()));
+    }
+    std::vector<Value *> argsv;
+    for (auto it = args->begin(); it != args->end(); it++) {
+        argsv.push_back((*it)->codeGen(context));
+        if (!argsv.back()) {
+            return NULL;
+        }
+    }
+    return context.builder.CreateCall(calleeF, argsv, "calltmp");
+}
+
+void CodeGenContext::generateCode(ProgramNode &root) {
+    cout << "Generating IR code" << endl;
+    pushBlock(NULL);
+    Value* retValue = root.codeGen(*this);
+    popBlock();
+    cout << "Code generate success" << endl;
+
+    PassManager passManager;
+    passManager.add(createPrintModulePass(outs()));
+    passManager.run(*(this->theModule.get()));
+    return;
+}
+
+void LogError(const char *str) {
+    fprintf(stderr, "LogError: %s\n", str);
+}
+
+Value *LogErrorV(string str){
+    return LogErrorV(str.c_str());
+}
+
+Value *LogErrorV(const char *str) {
+    LogError(str);
     return NULL;
 }

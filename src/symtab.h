@@ -39,7 +39,7 @@ public:
 
     SymbolNode *sym_look_up(string name);
 
-    Error *sym_insert(SymbolNode *sym);
+    MyError *sym_insert(SymbolNode *sym);
 
     int hashOf(string name);
 
