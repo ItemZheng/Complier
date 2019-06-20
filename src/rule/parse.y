@@ -613,5 +613,7 @@ int main(int argv, char **argc)
     }
 
     root->buildSymbolTable();
+
+	CodeGenContext context;
     // root->visit();
 }

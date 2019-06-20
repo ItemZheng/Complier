@@ -19,6 +19,7 @@ public:
     Value * returnValue;
     std::map<string, Value*> locals;
     std::map<string, shared_ptr<VarDeclNode>> types;
+    std::map<string, uint64_t> arraySize;
 };
 
 class CodeGenContext{
@@ -84,6 +85,19 @@ public:
 
     Value* getCurrentReturnValue(){
         return blockStack.back()->returnValue;
+    }
+
+    void setArraySize(string name, uint64_t value){
+        blockStack.back()->arraySize[name] = value;
+   }
+
+    uint64_t getArraySize(string name){
+        for(auto it=blockStack.rbegin(); it!=blockStack.rend(); it++){
+            if( (*it)->arraySize.find(name) != (*it)->arraySize.end() ){
+                return (*it)->arraySize[name];
+            }
+        }
+        return blockStack.back()->arraySize[name];
     }
 
 };
