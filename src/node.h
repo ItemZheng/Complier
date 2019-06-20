@@ -212,7 +212,7 @@ public:
 
     void visit();
 
-    llvm::Value* codeGen(CodeGenContext &context){return NULL;}
+    llvm::Value* codeGen(CodeGenContext &context);
 
     void buildSymbolTable();
 };

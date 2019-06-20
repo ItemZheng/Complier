@@ -32,9 +32,6 @@ static Type *typeOf(type_var type) {
 }
 
 static Type *typeOf(const VarDeclNode &vardecl) {
-    if (vardecl.type == ARRAY) {
-        return PointerType::get(typeOf(vardecl.typeVar), 0);
-    }
     return typeOf(vardecl.typeVar);
 }
 
@@ -105,7 +102,9 @@ llvm::Value *FunctionDefinitionNode::codeGen(CodeGenContext &context) {
     if (functionDeclNode != NULL && functionDeclNode->function_args != NULL) {
         int Idx = 0;
         for (Function::arg_iterator AI = F->arg_begin(); Idx != functionDeclNode->function_args->size(); ++AI, ++Idx) {
-            context.setSymbolValue((*(functionDeclNode->function_args))[Idx]->identifier, AI);
+            Value* argAlloc = (*(functionDeclNode->function_args))[Idx]->codeGen(context);
+            context.builder.CreateStore(AI, argAlloc, false);
+            // context.setSymbolValue( (*(functionDeclNode->function_args))[Idx]->identifier, AI);
         }
     }
 
@@ -116,6 +115,15 @@ llvm::Value *FunctionDefinitionNode::codeGen(CodeGenContext &context) {
     }
     context.popBlock();
     return NULL;
+}
+
+
+llvm::Value* FunctionArgNode::codeGen(CodeGenContext &context) {
+    //cout << "Generating variable declaration of " << typeVar << " " << *identifier << std::endl;
+    Type *llvmtype = typeOf(type);
+    Value * inst = context.builder.CreateAlloca(llvmtype);
+    context.setSymbolValue(identifier, inst);
+    return inst;
 }
 
 llvm::Value *FunctionBodyNode::codeGen(CodeGenContext &context) {
@@ -422,7 +430,7 @@ Value *ExpressionVNode::codeGen(CodeGenContext &context) {
                 if (!dst) {
                     return LogErrorV("Undeclared variable");
                 }
-                last = context.builder.CreateStore(exp, dst);
+                context.builder.CreateStore(exp, dst);
             }
             if (temptype == ARRAY) {
                 auto varPtr = context.getSymbolValue(*((*it)->array_access->identifier));
@@ -433,10 +441,11 @@ Value *ExpressionVNode::codeGen(CodeGenContext &context) {
                 if (!arrayPtr->getType()->isArrayTy() && !arrayPtr->getType()->isPointerTy()) {
                     return LogErrorV("The variable is not array");
                 }
-                Value *array_index = ConstantInt::get(Type::getInt32Ty(llvmContext), uint64_t(index), true);
-                ArrayRef<Value *> gep2_array{ConstantInt::get(Type::getInt32Ty(llvmContext), 0), array_index};
+                int index = (*it)->array_access->index;
+                Value *array_index = ConstantInt::get(Type::getInt32Ty(llvmContext), index, true);
+                ArrayRef<Value *> gep2_array{ConstantInt::get(Type::getInt64Ty(llvmContext), 0), array_index};
                 auto ptr = context.builder.CreateInBoundsGEP(varPtr, gep2_array, "elementPtr");
-                last = context.builder.CreateAlignedStore(exp, ptr, 4);
+                context.builder.CreateAlignedStore(exp, ptr, 4);
             }
         }
     }
