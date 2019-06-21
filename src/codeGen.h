@@ -137,6 +137,8 @@ public:
 
 };
 
+Type *typeOf(type_var type);
+
 static Value* CastToBoolean(CodeGenContext& context, Value* condValue){
     if( ISTYPE(condValue, Type::IntegerTyID) ){
         condValue = context.builder.CreateIntCast(condValue, Type::getInt1Ty(llvmContext), true);
@@ -145,6 +147,15 @@ static Value* CastToBoolean(CodeGenContext& context, Value* condValue){
         return context.builder.CreateFCmpONE(condValue, ConstantFP::get(llvmContext, APFloat(0.0)));
     }else{
         return condValue;
+    }
+}
+
+static Value* CastBoolean(CodeGenContext& context, Value* value, bool fp){
+    if(fp){
+        return CastInst::Create(llvm::CastInst::SIToFP, value, typeOf(TYPE_DOUBLE), "cast");
+    } else {
+        Value * middle = CastInst::Create(llvm::CastInst::SIToFP, value, typeOf(TYPE_DOUBLE), "cast");
+        return CastInst::Create(llvm::CastInst::FPToSI, middle, typeOf(TYPE_INT), "cast");
     }
 }
 

@@ -6,7 +6,7 @@
 #include "node.h"
 #include "type.h"
 
-static Type *typeOf(type_var type) {
+Type *typeOf(type_var type) {
     if (type == TYPE_INT) {
         return Type::getInt32Ty(llvmContext);
     }
@@ -482,6 +482,7 @@ Value *ExpressionNode::codeGen(CodeGenContext &context) {
         if (!L || !R) {
             return NULL;
         }
+        Value * result = NULL;
         switch (type) {
             case EXP_PLUS:
                 return fp ? context.builder.CreateFAdd(L, R, "addftmp") : context.builder.CreateAdd(L, R, "addtmp");
@@ -492,23 +493,29 @@ Value *ExpressionNode::codeGen(CodeGenContext &context) {
             case EXP_DIV:
                 return fp ? context.builder.CreateFDiv(L, R, "divftmp") : context.builder.CreateSDiv(L, R, "divtmp");
             case EXP_LESS:
-                return fp ? context.builder.CreateFCmpULT(L, R, "cmpftmp") : context.builder.CreateICmpULT(L, R,
+                result = fp ? context.builder.CreateFCmpULT(L, R, "cmpftmp") : context.builder.CreateICmpULT(L, R,
                                                                                                            "cmptmp");
+                return CastBoolean(context, result, fp);
             case EXP_LESS_EQUAL:
-                return fp ? context.builder.CreateFCmpOLE(L, R, "cmpftmp") : context.builder.CreateICmpSLE(L, R,
+                result = fp ? context.builder.CreateFCmpOLE(L, R, "cmpftmp") : context.builder.CreateICmpSLE(L, R,
                                                                                                            "cmptmp");
+                return CastBoolean(context, result, fp);
             case EXP_GREATER_EQUAL:
-                return fp ? context.builder.CreateFCmpOGE(L, R, "cmpftmp") : context.builder.CreateICmpSGE(L, R,
+                result = fp ? context.builder.CreateFCmpOGE(L, R, "cmpftmp") : context.builder.CreateICmpSGE(L, R,
                                                                                                            "cmptmp");
+                return CastBoolean(context, result, fp);
             case EXP_GREATER:
-                return fp ? context.builder.CreateFCmpOGT(L, R, "cmpftmp") : context.builder.CreateICmpSGT(L, R,
+                result = fp ? context.builder.CreateFCmpOGT(L, R, "cmpftmp") : context.builder.CreateICmpSGT(L, R,
                                                                                                            "cmptmp");
+                return CastBoolean(context, result, fp);
             case EXP_EQUAL:
-                return fp ? context.builder.CreateFCmpOEQ(L, R, "cmpftmp") : context.builder.CreateICmpEQ(L, R,
+                result = fp ? context.builder.CreateFCmpOEQ(L, R, "cmpftmp") : context.builder.CreateICmpEQ(L, R,
                                                                                                           "cmptmp");
+                return CastBoolean(context, result, fp);
             case EXP_NOT_EQUAL:
-                return fp ? context.builder.CreateFCmpONE(L, R, "cmpftmp") : context.builder.CreateICmpNE(L, R,
+                result = fp ? context.builder.CreateFCmpONE(L, R, "cmpftmp") : context.builder.CreateICmpNE(L, R,
                                                                                                           "cmptmp");
+                return CastBoolean(context, result, fp);
             default:
                 return LogErrorV("Unknown binary operator");
         }
