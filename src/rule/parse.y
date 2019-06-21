@@ -616,5 +616,6 @@ int main(int argv, char **argc)
 
     CodeGenContext context;
     context.generateCode(*root);
+	ObjGen(context, "out.o");
     // root->visit();
 }
