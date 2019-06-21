@@ -28,6 +28,9 @@ static Type *typeOf(type_var type) {
     if (type == TYPE_VOID) {
         return Type::getVoidTy(llvmContext);
     }
+    if (type == TYPE_STRING) {
+        return Type::getInt8PtrTy(llvmContext);
+    }
     return NULL;
 }
 
@@ -719,6 +722,8 @@ Value *ConstantNode::codeGen(CodeGenContext &context) {
         return ConstantFP::get(Type::getDoubleTy(llvmContext), double_number);
     } else if (type == TYPE_CHAR) {
         return ConstantInt::get(Type::getInt8Ty(llvmContext), character, true);
+    } else if (type == TYPE_STRING) {
+        return context.builder.CreateGlobalString(this->str, "string");
     }
     return NULL;
 }

@@ -37,6 +37,9 @@ void VarDeclarationNode::visit() {
         case TYPE_CHAR:
             cout << "char" << " ";
             break;
+        case TYPE_STRING:
+            cout << "string" << " ";
+            break;
         default:
             cout << "undefined type" << " ";
             break;
@@ -700,6 +703,9 @@ void FunctionDeclNode::visit() {
         case TYPE_CHAR:
             cout << "char" << " ";
             break;
+        case TYPE_STRING:
+            cout << "string" << " ";
+            break;
         default:
             cout << "undefined type" << " ";
             break;
@@ -753,6 +759,9 @@ void FunctionArgNode::visit() {
             break;
         case TYPE_CHAR:
             cout << "char" << " ";
+            break;
+        case TYPE_STRING:
+            cout << "string" << " ";
             break;
         default:
             cout << "undefined type" << " ";
@@ -1128,11 +1137,12 @@ void ForInitListNode::buildSymbolTable() {
     }
 }
 
-ConstantNode::ConstantNode(type_var type, int integer, double double_number, char character) {
+ConstantNode::ConstantNode(type_var type, int integer, double double_number, char character, string str) {
     this->type = type;
     this->integer = integer;
     this->double_number = double_number;
     this->character = character;
+    this->str = str;
 }
 
 void ConstantNode::visit() {
@@ -1145,6 +1155,9 @@ void ConstantNode::visit() {
             break;
         case TYPE_CHAR:
             cout << character;
+            break;
+        case TYPE_STRING:
+            cout << str;
             break;
         default:
             cout << "error: undefined type" << endl;
@@ -1245,6 +1258,9 @@ void ForDeclarationNode::visit() {
             break;
         case TYPE_CHAR:
             cout << "char" << " ";
+            break;
+        case TYPE_STRING:
+            cout << "string" << " ";
             break;
         default:
             cout << "undefined type" << " ";

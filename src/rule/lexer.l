@@ -66,6 +66,7 @@ str \"([^"\\\r\n]|{escapesequence})*\"
 "extern"        {return EXTERN;}
 "static"        {return STATIC;}
 "sizeof"        {return SIZEOF;}
+"string"        {return TSTRING;}
 
 "("             {return LEFT_PAREN;}
 ")"             {return RIGHT_PAREN;}
