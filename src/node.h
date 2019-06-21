@@ -582,8 +582,9 @@ public:
     int integer;
     double double_number;
     char character;
+    string str;
 public:
-    ConstantNode(type_var type, int integer, double double_number, char character);
+    ConstantNode(type_var type, int integer, double double_number, char character, string str);
 
     ~ConstantNode();
 

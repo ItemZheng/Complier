@@ -125,6 +125,9 @@ type:
 	}
 	| CHAR {
 		$$ = TYPE_CHAR;
+	}
+	| TSTRING {
+		$$ = TYPE_STRING;
 	};
 
 
@@ -293,16 +296,19 @@ var:
 constant:
 	INTEGER {
 		int temp = atoi($1->c_str());
-		$$ = new ConstantNode(TYPE_INT, temp, 0, '0');
+		$$ = new ConstantNode(TYPE_INT, temp, 0, '0', "");
 	}
 	| DOUBLE_NUMBER {
 		double temp = atof($1->c_str());
-		$$ = new ConstantNode(TYPE_DOUBLE, 0, temp, '0');
+		$$ = new ConstantNode(TYPE_DOUBLE, 0, temp, '0', "");
 	}
 	| CHARACTER {
 		char temp = (*($1))[1];
-		$$ = new ConstantNode(TYPE_CHAR, 0, 0, temp);
-	};
+		$$ = new ConstantNode(TYPE_CHAR, 0, 0, temp, "");
+	}
+	| STRING {
+		$$ = new ConstantNode(TYPE_STRING, 0, 0, (*$1));
+	}
 
 call: IDENTIFIER LEFT_PAREN args RIGHT_PAREN {
 	$$ = new CallNode($1, $3);
