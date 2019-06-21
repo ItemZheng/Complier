@@ -52,7 +52,7 @@ void ObjGen(CodeGenContext & context, const string& filename){
     raw_fd_ostream dest(filename.c_str(), EC, sys::fs::F_None);
     legacy::PassManager pass;
     auto fileType = TargetMachine::CGFT_ObjectFile;
-    if( theTargetMachine->addPassesToEmitFile(pass, dest, fileType) ){
+    if( theTargetMachine->addPassesToEmitFile(pass, dest, NULL, fileType) ){
         errs() << "theTargetMachine can't emit a file of this type";
         return;
     }

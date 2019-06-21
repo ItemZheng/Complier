@@ -1,11 +1,11 @@
 int main(){
     //循环语句
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < 6; i = i + 1){
         int a = 5;
     }
 
     int i;
-    for(i = 5; i < 6; i++){
+    for(i = 5; i < 6; i = i + 1){
         ;
     }
 
@@ -18,14 +18,14 @@ int main(){
     while(1){
         int a = 5;
     }
-    int a, b;
+    int a = 1, b = 1;
     while(a == b){
         break;
     }
 
     do {
         int a = 0;
-    }while(!(a >= b));
+    }while(a >= b);
 
     switch(a){
         case 1:int a = 5;break;
@@ -47,7 +47,7 @@ int main(){
 
     }
     else{
-       ; 
+        ;
     }
     int c, d;
     if(c == 0){
@@ -68,8 +68,9 @@ int main(){
     else{
         ;
     }
-    
+
     if(0){
 
     }else ;
+
 }

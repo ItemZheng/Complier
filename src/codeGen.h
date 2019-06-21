@@ -131,6 +131,10 @@ public:
 
     void generateCode(ProgramNode& root);
 
+    bool isGlobal(){
+        return blockStack.size() == 1;
+    }
+
 };
 
 static Value* CastToBoolean(CodeGenContext& context, Value* condValue){

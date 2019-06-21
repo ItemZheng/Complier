@@ -1,5 +1,5 @@
 int a;
-int b = a;
+int b = 2;
 int c = 1;
 
 int add(){
@@ -12,13 +12,13 @@ void main(){
 
     // loop
     int i = 0, sum = 0;
-    for(int i = 0; i <= 9; i++){
+    for(int i = 0; i <= 9; i = i + 1){
         sum = sum + i;
     }
 
     while(i <= 19){
         sum = sum + i;
-        i++;
+        i = i + 1;
         break;
     }
 
@@ -28,7 +28,7 @@ void main(){
             int sum = 0;
             sum = sum + 19;
         case 9:
-            sum = sum + 9;
+
         default:
             break;
     }

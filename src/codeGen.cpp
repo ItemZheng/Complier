@@ -69,7 +69,7 @@ llvm::Value *FunctionDeclNode::codeGen(CodeGenContext &context) {
             args.push_back(typeOf((*function_args)[i]->type));
         }
     }
-    FunctionType *functionType = FunctionType::get(typeOf(type), args, false);
+    FunctionType *functionType = FunctionType::get(typeOf(type), args, true);
     Function *F = Function::Create(functionType, GlobalValue::ExternalLinkage, identifier, context.theModule.get());
     if (F->getName() != identifier) {
         F->eraseFromParent();
@@ -206,6 +206,8 @@ llvm::Value *IterationStatementNode::codeGen(CodeGenContext &context) {
             Value *condValue = expressionVNode->codeGen(context);
             condValue = CastToBoolean(context, condValue);
             context.builder.CreateCondBr(condValue, block, after);
+        } else {
+            context.builder.CreateBr(block);
         }
         // loop body
         context.pushBlock(block);
@@ -380,12 +382,20 @@ Value *VarDeclNode::codeGen(CodeGenContext &context) {
     if (type == SINGLE) {
         //cout << "Generating variable declaration of " << typeVar << " " << *identifier << std::endl;
         Type *llvmtype = typeOf(*this);
-        inst = context.builder.CreateAlloca(llvmtype);
+        if(context.isGlobal()){
+            inst = new GlobalVariable(*context.theModule, llvmtype,
+                   false, GlobalValue::CommonLinkage, NULL, *identifier);
+        } else {
+            inst = context.builder.CreateAlloca(llvmtype);
+        }
         context.setSymbolValue(*identifier, inst);
         context.setSymbolType(*identifier, this);
         if (assign == 1) {
             Value *exp = expressionv->codeGen(context);
-            context.builder.CreateStore(exp, inst);
+            if(!context.isGlobal())
+                context.builder.CreateStore(exp, inst);
+            else
+                ((GlobalVariable *)inst)->setInitializer((Constant*) exp);
         }
     } else {
         //cout << "Generating array declaration of " << typeVar << " " << *(array_identifier->identifier) << std::endl;
@@ -718,16 +728,19 @@ Value *CallNode::codeGen(CodeGenContext &context) {
     if (!calleeF) {
         LogErrorV("Function name not found");
     }
-    if (calleeF->arg_size() != args->size()) {
-        LogErrorV(
-                "Function arguments size not match, calleeF=" + std::to_string(calleeF->size()) + ", this->arguments=" +
-                std::to_string(args->size()));
-    }
     std::vector<Value *> argsv;
-    for (auto it = args->begin(); it != args->end(); it++) {
-        argsv.push_back((*it)->codeGen(context));
-        if (!argsv.back()) {
-            return NULL;
+    if(args != NULL){
+        if (calleeF->arg_size() != args->size()) {
+            LogErrorV(
+                    "Function arguments size not match, calleeF=" + std::to_string(calleeF->size()) + ", this->arguments=" +
+                    std::to_string(args->size()));
+        }
+
+        for (auto it = args->begin(); it != args->end(); it++) {
+            argsv.push_back((*it)->codeGen(context));
+            if (!argsv.back()) {
+                return NULL;
+            }
         }
     }
     return context.builder.CreateCall(calleeF, argsv, "calltmp");

@@ -16,6 +16,7 @@
 #include <llvm/Support/raw_ostream.h>
 
 
+
 #ifndef COMPILER_NODE_H
 #define COMPILER_NODE_H
 
@@ -453,6 +454,7 @@ public:
     ArrayInitNode *array_init;
 
     type_var typeVar;
+    bool global = false;
 public:
     VarDeclNode(type_identifier type, string *identifier,
                 ArrayIdentifierNode *array_identifier, int assign, ExpressionVNode *expressionv,

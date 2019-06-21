@@ -2,6 +2,7 @@
 #include "node.h"
 #include "codeGen.h"
 #include "error.h"
+#include "objGen.h"
 #include "symtab.h"
 #include <math.h>
 #include <string>
@@ -616,6 +617,6 @@ int main(int argv, char **argc)
 
     CodeGenContext context;
     context.generateCode(*root);
-	ObjGen(context, "out.o");
+    ObjGen(context, "out.o");
     // root->visit();
 }
