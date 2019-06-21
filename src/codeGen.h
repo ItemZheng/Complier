@@ -152,10 +152,9 @@ static Value* CastToBoolean(CodeGenContext& context, Value* condValue){
 
 static Value* CastBoolean(CodeGenContext& context, Value* value, bool fp){
     if(fp){
-        return CastInst::Create(llvm::CastInst::SIToFP, value, typeOf(TYPE_DOUBLE), "cast");
+        return context.builder.CreateUIToFP(value, typeOf(TYPE_DOUBLE));
     } else {
-        Value * middle = CastInst::Create(llvm::CastInst::SIToFP, value, typeOf(TYPE_DOUBLE), "cast");
-        return CastInst::Create(llvm::CastInst::FPToSI, middle, typeOf(TYPE_INT), "cast");
+        return context.builder.CreateIntCast(value, typeOf(TYPE_INT),  false);
     }
 }
 

@@ -1,4 +1,7 @@
+int a = 1;
+
 int main(){
+    int i = a;
     int x = 0;
     int y = 1;
     if(x == 0){

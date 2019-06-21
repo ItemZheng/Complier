@@ -1,6 +1,7 @@
 #include "node.h"
 #include<string>
 #include<iostream>
+#include<algorithm>
 
 using namespace std;
 
@@ -1142,7 +1143,14 @@ ConstantNode::ConstantNode(type_var type, int integer, double double_number, cha
     this->integer = integer;
     this->double_number = double_number;
     this->character = character;
-    this->str = str;
+    if(str.size() > 1){
+        if(str.find("\\n") != -1){
+            str = str.replace(str.find("\\n"), 2, "\n");
+        }
+        this->str = str.substr(1, str.size() - 2);
+    } else {
+        this->str = str;
+    }
 }
 
 void ConstantNode::visit() {

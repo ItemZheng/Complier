@@ -26,7 +26,7 @@ integer [1-9]([0-9])*|0
 id ({letter}|_)({letter}|{digit}|_)*
 float {integer}\.([0-9])*
 character '([^\\\r\n]|{escapesequence})'
-str \"([^"\\\r\n]|{escapesequence})*\"
+str \"(\\.|[^"])*\"
 
 %x MULTICOMMENT SINGLECOMMENT
 

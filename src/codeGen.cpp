@@ -387,7 +387,7 @@ Value *VarDeclNode::codeGen(CodeGenContext &context) {
         Type *llvmtype = typeOf(*this);
         if(context.isGlobal()){
             inst = new GlobalVariable(*context.theModule, llvmtype,
-                   false, GlobalValue::CommonLinkage, NULL, *identifier);
+                   false, GlobalValue::InternalLinkage, NULL, *identifier);
         } else {
             inst = context.builder.CreateAlloca(llvmtype);
         }
@@ -631,7 +631,8 @@ llvm::Value *SwitchStatementNode::codeGen(CodeGenContext &context) {
     // 迭代过程需要用到的2 个 basic block
     BasicBlock *matchBB = BasicBlock::Create(llvmContext, "caseMatch");
     BasicBlock *unmatchBB = BasicBlock::Create(llvmContext, "caseUnMatch");
-    LabeledStatementNode *defaultLabel = NULL;
+
+    BasicBlock *defaultMatch = NULL;
 
     if (labeledStatementList != NULL) {
         for (int i = 0; i < labeledStatementList->size(); i++) {
@@ -656,7 +657,7 @@ llvm::Value *SwitchStatementNode::codeGen(CodeGenContext &context) {
                 context.builder.CreateCondBr(result, matchBB, unmatchBB);
             } else {
                 // default
-                defaultLabel = (*labeledStatementList)[i];
+                defaultMatch = matchBB;
                 context.builder.CreateBr(unmatchBB);
             }
 
@@ -678,10 +679,7 @@ llvm::Value *SwitchStatementNode::codeGen(CodeGenContext &context) {
     }
 
     // unmatch: go default
-    if (defaultLabel != NULL) {
-        defaultLabel->codeGen(context);
-    }
-    context.builder.CreateBr(end);
+    context.builder.CreateBr(defaultMatch);
 
     // end
     theFunction->getBasicBlockList().push_back(matchBB);
@@ -743,9 +741,9 @@ Value *CallNode::codeGen(CodeGenContext &context) {
     std::vector<Value *> argsv;
     if(args != NULL){
         if (calleeF->arg_size() != args->size()) {
-            LogErrorV(
-                    "Function arguments size not match, calleeF=" + std::to_string(calleeF->size()) + ", this->arguments=" +
-                    std::to_string(args->size()));
+//            LogErrorV(
+//                    "Function arguments size not match, calleeF=" + std::to_string(calleeF->size()) + ", this->arguments=" +
+//                    std::to_string(args->size()));
         }
 
         for (auto it = args->begin(); it != args->end(); it++) {
