@@ -18,4 +18,4 @@ test: Compiler
 	./test.sh
 
 clean:
-	rm -rf ./lex.yy.cpp ./y.tab.cpp ./y.tab.h ./y.output ./error.log compiler ./a.out
+	rm -rf ./lex.yy.cpp ./y.tab.cpp ./y.tab.h ./y.output ./error.log compiler ./a.out ./out.o ./out

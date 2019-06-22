@@ -12,7 +12,6 @@ int fact(int n){
 }
 
 int main(){
-    int xxxx = a;
 
     puts("Hello World");
 

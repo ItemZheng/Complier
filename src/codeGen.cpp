@@ -679,7 +679,11 @@ llvm::Value *SwitchStatementNode::codeGen(CodeGenContext &context) {
     }
 
     // unmatch: go default
-    context.builder.CreateBr(defaultMatch);
+    if(defaultMatch != NULL){
+        context.builder.CreateBr(defaultMatch);
+    } else {
+        context.builder.CreateBr(end);
+    }
 
     // end
     theFunction->getBasicBlockList().push_back(matchBB);
